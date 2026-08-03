@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boutique – Les Passionnés Motoneige</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#111110;--white:#fafaf8;
+  --gray-50:#f5f5f3;--gray-100:#e8e8e4;--gray-200:#d4d2c9;
+  --gray-300:#b4b2a9;--gray-500:#888780;--gray-700:#4a4945;
+  --accent:#c8a96e;--accent-light:#f5efe3;
+  --green:#2d6a4f;--green-light:#e8f5ee;
+  --red:#c0392b;--red-light:#fdf0ef;
+  --radius-sm:6px;--radius-md:10px;--radius-lg:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;color:var(--black);background:var(--white)}
+
+/* HEADER */
+.site-header{background:var(--black);color:var(--white);padding:14px 28px;display:flex;align-items:center;justify-content:space-between}
+.site-header .brand{font-family:'DM Serif Display',serif;font-size:16px}
+.site-header .brand small{display:block;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--gray-300);font-weight:400;margin-top:2px}
+
+/* HERO */
+.hero{background:linear-gradient(160deg,#0d2b1f 0%,#163b27 60%,#0d2b1f 100%);color:#fff;text-align:center;padding:40px 24px 64px}
+.hero-logo{max-width:360px;width:70%;height:auto;margin:0 auto 8px;display:block}
+.hero-badge{display:inline-block;background:rgba(200,169,110,0.15);border:1px solid rgba(200,169,110,0.4);color:var(--accent);font-size:11px;font-weight:700;padding:5px 14px;border-radius:99px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px}
+.hero h1{font-family:'DM Serif Display',serif;font-size:38px;font-weight:400;margin-bottom:10px}
+.hero p{font-size:14px;color:rgba(255,255,255,0.7);max-width:480px;margin:0 auto}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:1fr 340px;gap:32px;max-width:1180px;margin:0 auto;padding:40px 24px 80px;align-items:start}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+
+/* PRODUCT GRID */
+.product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.product-card{background:var(--white);border:1.5px solid var(--gray-100);border-radius:var(--radius-lg);overflow:hidden;display:flex;flex-direction:column}
+.product-card-img{width:100%;aspect-ratio:1/1;object-fit:contain;padding:14px;background:var(--gray-50)}
+.product-card-body{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
+.product-card-name{font-family:'DM Serif Display',serif;font-size:19px;font-weight:400}
+.product-card-price{font-size:15px;font-weight:700;color:var(--black)}
+.product-card-price span{font-size:11px;font-weight:500;color:var(--gray-500)}
+.product-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.p-select{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--black);background:var(--gray-50);border:1.5px solid var(--gray-100);border-radius:var(--radius-sm);padding:8px 10px;width:100%;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;cursor:pointer}
+.p-qty-wrap{display:flex;align-items:center;border:1.5px solid var(--gray-100);border-radius:var(--radius-sm);overflow:hidden;background:var(--gray-50)}
+.p-qty-btn{width:32px;height:34px;background:none;border:none;cursor:pointer;font-size:16px;color:var(--gray-700)}
+.p-qty-val{flex:1;text-align:center;font-size:13px;font-weight:700;background:transparent;border:none;outline:none;font-family:inherit}
+.p-surcharge-note{font-size:10px;color:var(--gray-500)}
+.p-add-btn{width:100%;padding:11px;background:var(--black);color:var(--white);border:none;border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.05em;margin-top:auto;transition:opacity 0.15s}
+.p-add-btn:hover{opacity:0.85}
+
+/* CUSTOMER FORM */
+.field-group{margin-bottom:10px;text-align:left}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.field-label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--gray-500);margin-bottom:5px}
+.field-input{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--black);background:var(--gray-50);border:1.5px solid var(--gray-100);border-radius:var(--radius-sm);padding:9px 11px;width:100%;outline:none;transition:border-color 0.15s}
+.field-input:focus{border-color:var(--accent)}
+.field-input.field-error{border-color:var(--red)}
+
+/* CART */
+.cart-panel{background:var(--white);border:1.5px solid var(--gray-100);border-radius:var(--radius-lg);padding:22px;position:sticky;top:24px}
+.cart-panel h2{font-family:'DM Serif Display',serif;font-size:19px;font-weight:400;margin-bottom:4px}
+.cart-sub{font-size:12px;color:var(--gray-500);margin-bottom:16px}
+.cart-empty{font-size:12px;color:var(--gray-500);text-align:center;padding:20px 0}
+.cart-item{background:var(--gray-50);border-radius:var(--radius-md);padding:10px 12px;margin-bottom:8px}
+.cart-item-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px}
+.cart-item-name{font-size:12px;font-weight:600}
+.cart-item-detail{font-size:11px;color:var(--gray-500)}
+.cart-item-remove{background:none;border:none;color:var(--gray-500);cursor:pointer;font-size:14px;line-height:1}
+.cart-item-remove:hover{color:var(--red)}
+.cart-item-bottom{display:flex;justify-content:space-between;align-items:center}
+.cart-item-qty{display:flex;align-items:center;border:1px solid var(--gray-200);border-radius:var(--radius-sm);overflow:hidden;background:var(--white)}
+.cart-item-qty button{width:24px;height:24px;border:none;background:none;cursor:pointer;font-size:14px}
+.cart-item-qty span{width:24px;text-align:center;font-size:12px;font-weight:700}
+.cart-item-subtotal{font-size:13px;font-weight:700}
+.cart-totals{border-top:1px solid var(--gray-100);margin-top:14px;padding-top:14px}
+.cart-totals-row{display:flex;justify-content:space-between;font-size:12px;color:var(--gray-700);margin-bottom:6px}
+.cart-total-final{display:flex;justify-content:space-between;font-family:'DM Serif Display',serif;font-size:20px;margin-top:10px}
+.checkout-btn{width:100%;padding:14px;background:var(--accent);color:var(--black);border:none;border-radius:var(--radius-md);font-size:14px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.05em;margin-top:14px;transition:opacity 0.15s}
+.checkout-btn:hover{opacity:0.88}
+.checkout-btn:disabled{opacity:0.4;cursor:not-allowed}
+.checkout-note{font-size:10px;color:var(--gray-500);text-align:center;margin-top:8px;line-height:1.5}
+.checkout-error{display:none;background:var(--red-light);color:var(--red);font-size:12px;padding:8px 10px;border-radius:var(--radius-sm);margin-top:10px}
+
+footer{text-align:center;font-size:11px;color:var(--gray-500);padding:24px;border-top:1px solid var(--gray-100)}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">Les Passionnés Motoneige<small>Boutique officielle · propulsé par Impression Peak 2 Peak</small></div>
+</header>
+
+<section class="hero">
+  <img src="images/logo-motoneige.png" alt="Les Passionnés Motoneige" class="hero-logo">
+  <h1>Collection Officielle — Braaap!! Braaap!!</h1>
+</section>
+
+<div class="layout">
+  <div class="product-grid" id="product-grid"></div>
+
+  <aside class="cart-panel">
+    <h2>Mon panier</h2>
+    <p class="cart-sub">Paiement sécurisé par carte de crédit</p>
+
+    <div class="field-group">
+      <label class="field-label">Nom complet *</label>
+      <input type="text" class="field-input" id="cust-name" placeholder="Ton nom">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Adresse *</label>
+      <input type="text" class="field-input" id="cust-adresse" placeholder="123 rue des Sommets">
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label">Ville *</label>
+        <input type="text" class="field-input" id="cust-ville" placeholder="Bromont">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Code postal *</label>
+        <input type="text" class="field-input" id="cust-codepostal" placeholder="J2L 1A1" maxlength="7">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Province *</label>
+      <select class="field-input" id="cust-province">
+        <option value="">— Choisir —</option>
+        <option>Québec</option><option>Ontario</option><option>Colombie-Britannique</option>
+        <option>Alberta</option><option>Manitoba</option><option>Saskatchewan</option>
+        <option>Nouvelle-Écosse</option><option>Nouveau-Brunswick</option><option>Terre-Neuve</option>
+        <option>Île-du-Prince-Édouard</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Téléphone</label>
+      <input type="tel" class="field-input" id="cust-phone" placeholder="514-000-0000">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Courriel *</label>
+      <input type="email" class="field-input" id="cust-email" placeholder="courriel@exemple.com">
+    </div>
+
+    <div id="cart-items"><div class="cart-empty">Ton panier est vide.</div></div>
+    <div class="cart-totals" id="cart-totals" style="display:none">
+      <div class="cart-totals-row"><span>Sous-total</span><span id="ct-subtotal">0,00 $</span></div>
+      <div class="cart-totals-row"><span>Livraison</span><span id="ct-livraison">0,00 $</span></div>
+      <div class="cart-totals-row"><span>TPS (5%)</span><span id="ct-tps">0,00 $</span></div>
+      <div class="cart-totals-row"><span>TVQ (9,975%)</span><span id="ct-tvq">0,00 $</span></div>
+      <div class="cart-total-final"><span>Total</span><span id="ct-total">0,00 $</span></div>
+    </div>
+    <button class="checkout-btn" id="checkout-btn" onclick="checkout()" disabled>Payer maintenant</button>
+    <div class="checkout-error" id="checkout-error"></div>
+    <div class="checkout-note">Taxes et livraison calculées à l'étape de paiement Stripe.</div>
+  </aside>
+</div>
+
+<footer>© Les Passionnés Motoneige · Impression Peak 2 Peak, Bromont QC</footer>
+
+<script>
+// ── CATALOGUE ──────────────────────────────────────────────────────────────
+var PRODUCTS = [
+  { id:'hoodie',   name:'Hoodie',   price:55.00, img:'images/hoodie-motoneige.png',   sizes:['XS','S','M','L','XL','2XL','3XL'] },
+  { id:'crewneck', name:'Crewneck', price:45.00, img:'images/crewneck-motoneige.png', sizes:['XS','S','M','L','XL','2XL','3XL'] },
+  { id:'tshirt',   name:'T-Shirt',  price:30.00, img:'images/tshirt-motoneige.png',   sizes:['XS','S','M','L','XL','2XL','3XL'] }
+];
+var BIG_SIZES = ['2XL','3XL'];
+var SURCHARGE = 5.00;
+var LIVRAISON = 15.00;
+var TPS_RATE = 0.05;
+var TVQ_RATE = 0.09975;
+
+function fmt(n){ return n.toFixed(2).replace('.',',') + ' $'; }
+function unitPrice(prod, size){ return prod.price + (BIG_SIZES.indexOf(size) !== -1 ? SURCHARGE : 0); }
+
+// ── RENDER PRODUCTS ──────────────────────────────────────────────────────
+function renderProducts() {
+  var grid = document.getElementById('product-grid');
+  grid.innerHTML = PRODUCTS.map(function(p, idx) {
+    var sizeOpts = p.sizes.map(function(s){ return '<option value="' + s + '">' + s + (BIG_SIZES.indexOf(s)!==-1 ? ' (+' + fmt(SURCHARGE) + ')' : '') + '</option>'; }).join('');
+    return '' +
+      '<div class="product-card">' +
+        '<img class="product-card-img" src="' + p.img + '" alt="' + p.name + ' Les Passionnés Motoneige">' +
+        '<div class="product-card-body">' +
+          '<div class="product-card-name">' + p.name + '</div>' +
+          '<div class="product-card-price">' + fmt(p.price) + ' <span>/ pièce · XS–XL, +' + fmt(SURCHARGE) + ' pour 2XL–3XL</span></div>' +
+          '<div class="product-row">' +
+            '<select class="p-select" id="size-' + p.id + '">' + sizeOpts + '</select>' +
+            '<div class="p-qty-wrap">' +
+              '<button class="p-qty-btn" onclick="stepQty(\'' + p.id + '\',-1)">−</button>' +
+              '<input class="p-qty-val" type="number" id="qty-' + p.id + '" value="1" min="1" max="99">' +
+              '<button class="p-qty-btn" onclick="stepQty(\'' + p.id + '\',1)">+</button>' +
+            '</div>' +
+          '</div>' +
+          '<button class="p-add-btn" onclick="addToCart(\'' + p.id + '\')">Ajouter au panier</button>' +
+        '</div>' +
+      '</div>';
+  }).join('');
+}
+
+function stepQty(id, delta) {
+  var el = document.getElementById('qty-' + id);
+  var v = Math.max(1, (parseInt(el.value, 10) || 1) + delta);
+  el.value = v;
+}
+
+// ── CART STATE ─────────────────────────────────────────────────────────
+var cart = [];
+try {
+  var saved = localStorage.getItem('motoneige-cart');
+  if (saved) cart = JSON.parse(saved);
+} catch(e) { cart = []; }
+
+function saveCart() {
+  try { localStorage.setItem('motoneige-cart', JSON.stringify(cart)); } catch(e) {}
+}
+
+function addToCart(id) {
+  var prod = PRODUCTS.filter(function(p){ return p.id === id; })[0];
+  var size = document.getElementById('size-' + id).value;
+  var qty = Math.max(1, parseInt(document.getElementById('qty-' + id).value, 10) || 1);
+  var existing = cart.filter(function(it){ return it.id === id && it.size === size; })[0];
+  if (existing) { existing.qty += qty; }
+  else { cart.push({ id: id, name: prod.name, size: size, qty: qty }); }
+  saveCart();
+  renderCart();
+}
+
+function removeFromCart(idx) {
+  cart.splice(idx, 1);
+  saveCart();
+  renderCart();
+}
+
+function changeCartQty(idx, delta) {
+  cart[idx].qty = Math.max(1, cart[idx].qty + delta);
+  saveCart();
+  renderCart();
+}
+
+function renderCart() {
+  var el = document.getElementById('cart-items');
+  var totalsEl = document.getElementById('cart-totals');
+  var btn = document.getElementById('checkout-btn');
+
+  if (cart.length === 0) {
+    el.innerHTML = '<div class="cart-empty">Ton panier est vide.</div>';
+    totalsEl.style.display = 'none';
+    btn.disabled = true;
+    return;
+  }
+
+  var subtotal = 0;
+  el.innerHTML = cart.map(function(it, idx) {
+    var prod = PRODUCTS.filter(function(p){ return p.id === it.id; })[0];
+    var unit = unitPrice(prod, it.size);
+    var lineTotal = unit * it.qty;
+    subtotal += lineTotal;
+    return '' +
+      '<div class="cart-item">' +
+        '<div class="cart-item-top">' +
+          '<div><div class="cart-item-name">' + it.name + '</div><div class="cart-item-detail">Grandeur ' + it.size + ' · ' + fmt(unit) + '/pièce</div></div>' +
+          '<button class="cart-item-remove" onclick="removeFromCart(' + idx + ')">×</button>' +
+        '</div>' +
+        '<div class="cart-item-bottom">' +
+          '<div class="cart-item-qty"><button onclick="changeCartQty(' + idx + ',-1)">−</button><span>' + it.qty + '</span><button onclick="changeCartQty(' + idx + ',1)">+</button></div>' +
+          '<div class="cart-item-subtotal">' + fmt(lineTotal) + '</div>' +
+        '</div>' +
+      '</div>';
+  }).join('');
+
+  var avantTaxes = subtotal + LIVRAISON;
+  var tps = avantTaxes * TPS_RATE;
+  var tvq = avantTaxes * TVQ_RATE;
+  var total = avantTaxes + tps + tvq;
+
+  document.getElementById('ct-subtotal').textContent = fmt(subtotal);
+  document.getElementById('ct-livraison').textContent = fmt(LIVRAISON);
+  document.getElementById('ct-tps').textContent = fmt(tps);
+  document.getElementById('ct-tvq').textContent = fmt(tvq);
+  document.getElementById('ct-total').textContent = fmt(total);
+  totalsEl.style.display = 'block';
+  btn.disabled = false;
+}
+
+// ── CHECKOUT ───────────────────────────────────────────────────────────
+function getCustomer() {
+  return {
+    name: document.getElementById('cust-name').value.trim(),
+    email: document.getElementById('cust-email').value.trim(),
+    phone: document.getElementById('cust-phone').value.trim(),
+    adresse: document.getElementById('cust-adresse').value.trim(),
+    ville: document.getElementById('cust-ville').value.trim(),
+    codepostal: document.getElementById('cust-codepostal').value.trim(),
+    province: document.getElementById('cust-province').value.trim()
+  };
+}
+
+function validateCustomer(customer) {
+  var fields = ['name','email','adresse','ville','codepostal','province'];
+  fields.forEach(function(f) {
+    var id = f === 'name' ? 'cust-name' : f === 'email' ? 'cust-email' : 'cust-' + f;
+    document.getElementById(id).classList.remove('field-error');
+  });
+
+  var ok = true;
+  if (!customer.name) { document.getElementById('cust-name').classList.add('field-error'); ok = false; }
+  var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email);
+  if (!emailOk) { document.getElementById('cust-email').classList.add('field-error'); ok = false; }
+  if (!customer.adresse) { document.getElementById('cust-adresse').classList.add('field-error'); ok = false; }
+  if (!customer.ville) { document.getElementById('cust-ville').classList.add('field-error'); ok = false; }
+  if (!customer.codepostal) { document.getElementById('cust-codepostal').classList.add('field-error'); ok = false; }
+  if (!customer.province) { document.getElementById('cust-province').classList.add('field-error'); ok = false; }
+  return ok;
+}
+
+function checkout() {
+  var btn = document.getElementById('checkout-btn');
+  var errEl = document.getElementById('checkout-error');
+  errEl.style.display = 'none';
+
+  var customer = getCustomer();
+  if (!validateCustomer(customer)) {
+    errEl.textContent = '❌ Remplis tous les champs obligatoires (*) avant de payer.';
+    errEl.style.display = 'block';
+    document.getElementById('cust-name').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  try { localStorage.setItem('motoneige-customer', JSON.stringify(customer)); } catch(e) {}
+
+  btn.disabled = true;
+  btn.textContent = 'Redirection…';
+
+  fetch('/.netlify/functions/create-checkout-session', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ items: cart, customer: customer })
+  })
+  .then(function(res) { return res.json().then(function(data){ return { ok: res.ok, data: data }; }); })
+  .then(function(result) {
+    if (!result.ok || !result.data.url) throw new Error(result.data.error || 'Erreur inconnue');
+    window.location.href = result.data.url;
+  })
+  .catch(function(err) {
+    errEl.textContent = '❌ ' + err.message + ' — réessaie ou contacte-nous.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Payer maintenant';
+  });
+}
+
+renderProducts();
+renderCart();
+
+// Pré-remplir les coordonnées si déjà saisies avant (ex: retour après erreur)
+try {
+  var savedCustomer = JSON.parse(localStorage.getItem('motoneige-customer') || 'null');
+  if (savedCustomer) {
+    if (savedCustomer.name)       document.getElementById('cust-name').value       = savedCustomer.name;
+    if (savedCustomer.email)      document.getElementById('cust-email').value      = savedCustomer.email;
+    if (savedCustomer.phone)      document.getElementById('cust-phone').value      = savedCustomer.phone;
+    if (savedCustomer.adresse)    document.getElementById('cust-adresse').value    = savedCustomer.adresse;
+    if (savedCustomer.ville)      document.getElementById('cust-ville').value      = savedCustomer.ville;
+    if (savedCustomer.codepostal) document.getElementById('cust-codepostal').value = savedCustomer.codepostal;
+    if (savedCustomer.province)   document.getElementById('cust-province').value   = savedCustomer.province;
+  }
+} catch(e) {}
+</script>
+</body>
+</html>
