@@ -32,7 +32,7 @@ a{display:inline-block;background:#a95c35;color:#fff;text-decoration:none;paddin
 // destinataires déjà fixés dans EmailJS — pas de risque à les exposer ici.
 var EMAILJS_PUBLIC_KEY  = 'v2EsCCD55O3D8WsVc';
 var EMAILJS_SERVICE_ID  = 'service_o3zcv4n';
-var EMAILJS_TEMPLATE_ID = '4nasodg';
+var EMAILJS_TEMPLATE_ID = 'template_vvux28p';
 
 (function(){ emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); })();
 
@@ -119,7 +119,9 @@ function sendOrderNotification() {
     email: customer.email || '',
     shipping_method: 'Transporteur',
     cost: {
+      subtotal: subtotal.toFixed(2),
       shipping: LIVRAISON.toFixed(2),
+      before_tax: avantTaxes.toFixed(2),
       tax: taxes.toFixed(2),
       total: (avantTaxes + taxes).toFixed(2)
     }
