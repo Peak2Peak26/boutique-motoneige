@@ -11,7 +11,7 @@
   --black:#111110;--white:#fafaf8;
   --gray-50:#f5f5f3;--gray-100:#e8e8e4;--gray-200:#d4d2c9;
   --gray-300:#b4b2a9;--gray-500:#888780;--gray-700:#4a4945;
-  --accent:#c8a96e;--accent-light:#f5efe3;
+  --accent:#a95c35;--accent-light:#f8ede6;
   --green:#2d6a4f;--green-light:#e8f5ee;
   --red:#c0392b;--red-light:#fdf0ef;
   --radius-sm:6px;--radius-md:10px;--radius-lg:16px;
@@ -25,15 +25,16 @@ body{font-family:'DM Sans',sans-serif;color:var(--black);background:var(--white)
 .site-header .brand small{display:block;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--gray-300);font-weight:400;margin-top:2px}
 
 /* HERO */
-.hero{background:linear-gradient(160deg,#0d2b1f 0%,#163b27 60%,#0d2b1f 100%);color:#fff;text-align:center;padding:40px 24px 64px}
-.hero-logo{max-width:360px;width:70%;height:auto;margin:0 auto 8px;display:block}
+.hero{background:linear-gradient(160deg,#000000 0%,#1a1a1a 60%,#000000 100%);color:#fff;text-align:center;padding:40px 24px 64px}
+.hero-logo{max-width:340px;width:70%;height:auto;margin:0 auto 18px;display:block}
 .hero-badge{display:inline-block;background:rgba(200,169,110,0.15);border:1px solid rgba(200,169,110,0.4);color:var(--accent);font-size:11px;font-weight:700;padding:5px 14px;border-radius:99px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px}
-.hero h1{font-family:'DM Serif Display',serif;font-size:38px;font-weight:400;margin-bottom:10px}
+.hero h1{font-family:'DM Serif Display',serif;font-size:52px;font-weight:400;margin-bottom:10px;letter-spacing:0.01em}
 .hero p{font-size:14px;color:rgba(255,255,255,0.7);max-width:480px;margin:0 auto}
 
 /* LAYOUT */
 .layout{display:grid;grid-template-columns:1fr 340px;gap:32px;max-width:1180px;margin:0 auto;padding:40px 24px 80px;align-items:start}
 @media(max-width:900px){.layout{grid-template-columns:1fr}}
+@media(max-width:600px){.hero h1{font-size:36px}}
 
 /* PRODUCT GRID */
 .product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
@@ -51,6 +52,26 @@ body{font-family:'DM Sans',sans-serif;color:var(--black);background:var(--white)
 .p-surcharge-note{font-size:10px;color:var(--gray-500)}
 .p-add-btn{width:100%;padding:11px;background:var(--black);color:var(--white);border:none;border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.05em;margin-top:auto;transition:opacity 0.15s}
 .p-add-btn:hover{opacity:0.85}
+.p-chart-link{background:none;border:none;color:var(--accent);font-size:11px;font-weight:600;cursor:pointer;padding:0;margin-bottom:8px;text-align:left;text-decoration:underline}
+.p-chart-link:hover{opacity:0.8}
+.color-swatch-row{display:flex;gap:8px;margin-bottom:10px}
+.audience-toggle-row{display:flex;gap:6px;margin:6px 0 10px}
+.audience-btn{flex:1;padding:6px 10px;font-size:13px;font-weight:600;border-radius:var(--radius-sm);border:1.5px solid #ddd;background:#fff;color:#555;cursor:pointer}
+.audience-btn.active{border-color:#a95c35;background:#a95c35;color:#fff}
+.color-swatch{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:4px;border-radius:var(--radius-sm);border:1.5px solid transparent}
+.color-swatch img{width:44px;height:44px;object-fit:contain;background:var(--gray-50);border-radius:6px;border:1.5px solid var(--gray-100)}
+.color-swatch span{font-size:10px;color:var(--gray-700);font-weight:500}
+.color-swatch.active{border-color:var(--accent)}
+.color-swatch.active img{border-color:var(--accent)}
+.color-swatch.active span{color:var(--accent);font-weight:700}
+
+/* SIZE CHART LIGHTBOX */
+.chart-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:400;display:none;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
+.chart-modal-overlay.open{display:flex}
+.chart-modal-img{max-width:100%;max-height:88vh;background:#fff;border-radius:var(--radius-md);box-shadow:0 20px 60px rgba(0,0,0,0.5);cursor:default}
+.chart-modal-close{position:absolute;top:20px;right:24px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.12);border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.chart-modal-close:hover{background:rgba(255,255,255,0.22)}
+.chart-modal-title{position:absolute;top:24px;left:24px;color:#fff;font-size:13px;font-weight:600;background:rgba(255,255,255,0.1);padding:6px 14px;border-radius:99px}
 
 /* CUSTOMER FORM */
 .field-group{margin-bottom:10px;text-align:left}
@@ -79,12 +100,16 @@ body{font-family:'DM Sans',sans-serif;color:var(--black);background:var(--white)
 .cart-totals{border-top:1px solid var(--gray-100);margin-top:14px;padding-top:14px}
 .cart-totals-row{display:flex;justify-content:space-between;font-size:12px;color:var(--gray-700);margin-bottom:6px}
 .cart-total-final{display:flex;justify-content:space-between;font-family:'DM Serif Display',serif;font-size:20px;margin-top:10px}
-.checkout-btn{width:100%;padding:14px;background:var(--accent);color:var(--black);border:none;border-radius:var(--radius-md);font-size:14px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.05em;margin-top:14px;transition:opacity 0.15s}
+.checkout-btn{width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-md);font-size:14px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.05em;margin-top:14px;transition:opacity 0.15s}
 .checkout-btn:hover{opacity:0.88}
 .checkout-btn:disabled{opacity:0.4;cursor:not-allowed}
 .checkout-note{font-size:10px;color:var(--gray-500);text-align:center;margin-top:8px;line-height:1.5}
 .checkout-error{display:none;background:var(--red-light);color:var(--red);font-size:12px;padding:8px 10px;border-radius:var(--radius-sm);margin-top:10px}
 
+.size-notice{background:var(--accent-light);border:1.5px solid var(--accent);border-radius:var(--radius-md);padding:12px 16px;font-size:13px;line-height:1.5;margin-bottom:20px}
+.size-confirm{display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.4;margin-top:14px;padding:10px;border:1.5px solid var(--gray-100);border-radius:var(--radius-sm);cursor:pointer}
+.size-confirm input{margin-top:2px;width:16px;height:16px;flex:none;accent-color:var(--accent)}
+.size-confirm.field-error{border-color:var(--red);background:var(--red-light)}
 footer{text-align:center;font-size:11px;color:var(--gray-500);padding:24px;border-top:1px solid var(--gray-100)}
 </style>
 </head>
@@ -95,12 +120,16 @@ footer{text-align:center;font-size:11px;color:var(--gray-500);padding:24px;borde
 </header>
 
 <section class="hero">
-  <img src="images/logo-motoneige.png" alt="Les Passionnés Motoneige" class="hero-logo">
-  <h1>Collection Officielle — Braaap!! Braaap!!</h1>
+  <img src="images/logo-passionnes.png" alt="Les Passionnés Motoneige" class="hero-logo">
+  <h1>Collection officielle</h1>
+  <p>Braaap!! Braaap!! — vêtements et accessoires du groupe</p>
 </section>
 
 <div class="layout">
-  <div class="product-grid" id="product-grid"></div>
+  <div>
+    <div class="size-notice"><strong>📏 Vérifie ta grandeur avant de commander.</strong> Chaque vêtement a son propre guide des tailles (les coupes varient d'un modèle à l'autre) : clique sur « Guide des tailles » sous le prix et compare avec un vêtement que tu portes déjà.</div>
+    <div class="product-grid" id="product-grid"></div>
+  </div>
 
   <aside class="cart-panel">
     <h2>Mon panier</h2>
@@ -126,7 +155,7 @@ footer{text-align:center;font-size:11px;color:var(--gray-500);padding:24px;borde
     </div>
     <div class="field-group">
       <label class="field-label">Province *</label>
-      <select class="field-input" id="cust-province">
+      <select class="field-input" id="cust-province" onchange="renderCart()">
         <option value="">— Choisir —</option>
         <option>Québec</option><option>Ontario</option><option>Colombie-Britannique</option>
         <option>Alberta</option><option>Manitoba</option><option>Saskatchewan</option>
@@ -146,29 +175,46 @@ footer{text-align:center;font-size:11px;color:var(--gray-500);padding:24px;borde
     <div id="cart-items"><div class="cart-empty">Ton panier est vide.</div></div>
     <div class="cart-totals" id="cart-totals" style="display:none">
       <div class="cart-totals-row"><span>Sous-total</span><span id="ct-subtotal">0,00 $</span></div>
-      <div class="cart-totals-row"><span>Livraison</span><span id="ct-livraison">0,00 $</span></div>
+      <div class="cart-totals-row"><span id="ct-livraison-label">Livraison</span><span id="ct-livraison">0,00 $</span></div>
       <div class="cart-totals-row"><span>TPS (5%)</span><span id="ct-tps">0,00 $</span></div>
       <div class="cart-totals-row"><span>TVQ (9,975%)</span><span id="ct-tvq">0,00 $</span></div>
       <div class="cart-total-final"><span>Total</span><span id="ct-total">0,00 $</span></div>
     </div>
+    <label class="size-confirm" id="size-confirm-wrap"><input type="checkbox" id="size-confirm"><span>J'ai consulté le guide des tailles et je confirme les grandeurs de ma commande. *</span></label>
     <button class="checkout-btn" id="checkout-btn" onclick="checkout()" disabled>Payer maintenant</button>
     <div class="checkout-error" id="checkout-error"></div>
-    <div class="checkout-note">Taxes et livraison calculées à l'étape de paiement Stripe.</div>
+    <div class="checkout-note">Livraison : 15 $ au Québec · 25 $ hors Québec. Taxes incluses dans le total ci-dessus. Paiement sécurisé par Square.</div>
   </aside>
 </div>
 
 <footer>© Les Passionnés Motoneige · Impression Peak 2 Peak, Bromont QC</footer>
 
+<div class="chart-modal-overlay" id="chart-modal-overlay" onclick="closeChart(event)">
+  <div class="chart-modal-title" id="chart-modal-title"></div>
+  <button class="chart-modal-close" onclick="closeChart(event)">×</button>
+  <img class="chart-modal-img" id="chart-modal-img" src="" alt="Guide des tailles">
+</div>
+
 <script>
 // ── CATALOGUE ──────────────────────────────────────────────────────────────
 var PRODUCTS = [
-  { id:'hoodie',   name:'Hoodie',   price:55.00, img:'images/hoodie-motoneige.png',   sizes:['XS','S','M','L','XL','2XL','3XL'] },
-  { id:'crewneck', name:'Crewneck', price:45.00, img:'images/crewneck-motoneige.png', sizes:['XS','S','M','L','XL','2XL','3XL'] },
-  { id:'tshirt',   name:'T-Shirt',  price:30.00, img:'images/tshirt-motoneige.png',   sizes:['XS','S','M','L','XL','2XL','3XL'] }
+  {"id": "tshirt-coton", "name": "T-Shirt Coton", "price": 30.0, "img": "images/tshirt-coton.webp", "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-tshirt-coton.webp"},
+  {"id": "ml-coton", "name": "T-Shirt Manches Longues Coton", "price": 35.0, "img": "images/ml-coton.webp", "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-ml-coton.webp"},
+  {"id": "crewneck", "name": "Crewneck", "price": 45.0, "img": "images/crewneck.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-crewneck.webp"},
+  {"id": "hoodie-2", "name": "Hoodie 2 logos", "price": 50.0, "img": "images/hoodie-2-logos.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-hoodie.webp"},
+  {"id": "hoodie-3", "name": "Hoodie 3 logos", "price": 50.0, "img": "images/hoodie-3-logos.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-hoodie.webp"},
+  {"id": "hoodie-se", "name": "Hoodie Édition Spéciale 4 logos", "price": 70.0, "img": "images/hoodie-se-noir.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-hoodie-se.webp", "colors": [{"name": "Noir", "img": "images/hoodie-se-noir.webp"}, {"name": "Moss", "img": "images/hoodie-se-moss.webp"}]},
+  {"id": "tshirt-dryfit", "name": "T-Shirt Dryfit", "price": 35.0, "img": "images/tshirt-dryfit-homme.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-tshirt-dryfit-homme.webp", "colors": [{"name": "Homme", "img": "images/tshirt-dryfit-homme.webp", "chart": "images/chart-tshirt-dryfit-homme.webp"}, {"name": "Femme", "img": "images/tshirt-dryfit-femme.webp", "chart": "images/chart-tshirt-dryfit-femme.webp"}]},
+  {"id": "ml-dryfit", "name": "T-Shirt Manches Longues Dryfit", "price": 45.0, "img": "images/ml-dryfit-homme.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-ml-dryfit-homme.webp", "colors": [{"name": "Homme", "img": "images/ml-dryfit-homme.webp", "chart": "images/chart-ml-dryfit-homme.webp"}, {"name": "Femme", "img": "images/ml-dryfit-femme.webp", "chart": "images/chart-ml-dryfit-femme.webp"}]},
+  {"id": "tuque", "name": "Tuque", "price": 29.0, "img": "images/tuque.webp", "sizes": ["Unique"]},
+  {"id": "casquette", "name": "Casquette", "price": 29.0, "img": "images/casquette.webp", "sizes": ["Unique"]}
 ];
-var BIG_SIZES = ['2XL','3XL'];
+var BIG_SIZES = ['2XL','3XL','4XL'];
 var SURCHARGE = 5.00;
-var LIVRAISON = 15.00;
+var LIVRAISON_QC = 15.00;
+var LIVRAISON_HORS_QC = 25.00;
+function horsQuebec(){ var p = document.getElementById('cust-province').value; return !!p && p !== 'Québec'; }
+function livraison(){ return horsQuebec() ? LIVRAISON_HORS_QC : LIVRAISON_QC; }
 var TPS_RATE = 0.05;
 var TVQ_RATE = 0.09975;
 
@@ -176,16 +222,55 @@ function fmt(n){ return n.toFixed(2).replace('.',',') + ' $'; }
 function unitPrice(prod, size){ return prod.price + (BIG_SIZES.indexOf(size) !== -1 ? SURCHARGE : 0); }
 
 // ── RENDER PRODUCTS ──────────────────────────────────────────────────────
+var selectedAudience = {};
+var selectedColors = {};
+function selectAudience(id, audience) {
+  var qtySnapshot = {};
+  PRODUCTS.forEach(function(p){ var el = document.getElementById('qty-' + p.id); if (el) qtySnapshot[p.id] = el.value; });
+  selectedAudience[id] = audience;
+  renderProducts();
+  Object.keys(qtySnapshot).forEach(function(pid){ var el = document.getElementById('qty-' + pid); if (el) el.value = qtySnapshot[pid]; });
+}
+
 function renderProducts() {
   var grid = document.getElementById('product-grid');
-  grid.innerHTML = PRODUCTS.map(function(p, idx) {
-    var sizeOpts = p.sizes.map(function(s){ return '<option value="' + s + '">' + s + (BIG_SIZES.indexOf(s)!==-1 ? ' (+' + fmt(SURCHARGE) + ')' : '') + '</option>'; }).join('');
+  grid.innerHTML = PRODUCTS.filter(function(p){ return !p.hidden; }).map(function(p, idx) {
+    var aud = selectedAudience[p.id] || 'adulte';
+    var kidzProd = p.kidzId ? PRODUCTS.filter(function(x){ return x.id === p.kidzId; })[0] : null;
+    var active = (aud === 'kidz' && kidzProd) ? kidzProd : p;
+
+    var audienceToggle = kidzProd ? (
+      '<div class="audience-toggle-row">' +
+        '<button type="button" class="audience-btn' + (aud !== 'kidz' ? ' active' : '') + '" onclick="selectAudience(\'' + p.id + '\',\'adulte\')">Adulte</button>' +
+        '<button type="button" class="audience-btn' + (aud === 'kidz' ? ' active' : '') + '" onclick="selectAudience(\'' + p.id + '\',\'kidz\')">Kidz</button>' +
+      '</div>'
+    ) : '';
+
+    var sizeOpts = active.sizes.map(function(s){ return '<option value="' + s + '">' + s + (BIG_SIZES.indexOf(s)!==-1 ? ' (+' + fmt(SURCHARGE) + ')' : '') + '</option>'; }).join('');
+    var hasBigSizes = active.sizes.some(function(s){ return BIG_SIZES.indexOf(s) !== -1; });
+    var sizeNote = active.sizes.length <= 1 ? 'Taille unique' :
+      (active.sizes[0] + '–' + active.sizes[active.sizes.length - (hasBigSizes ? BIG_SIZES.length + 1 : 1)] + (hasBigSizes ? ', +' + fmt(SURCHARGE) + ' pour ' + BIG_SIZES.join('-') : ''));
+    var sizeChartLink = p.sizeChart ? '<button type="button" class="p-chart-link" onclick="openChartFor(\'' + p.id + '\')">📏 Guide des tailles</button>' : '';
+    var colorSwatches = '';
+    if (p.colors) {
+      var swatchItems = p.colors.map(function(c, ci) {
+        var isActive = selectedColors[p.id] ? selectedColors[p.id] === c.name : ci === 0;
+        return '<div class="color-swatch' + (isActive ? ' active' : '') + '" data-product="' + p.id + '" data-color="' + c.name + '" onclick="selectColor(\'' + p.id + '\',\'' + c.name + '\')">' +
+          '<img src="' + c.img + '" alt="' + p.name + ' ' + c.name + '">' +
+          '<span>' + c.name + '</span>' +
+        '</div>';
+      }).join('');
+      colorSwatches = '<div class="color-swatch-row">' + swatchItems + '</div>';
+    }
     return '' +
       '<div class="product-card">' +
-        '<img class="product-card-img" src="' + p.img + '" alt="' + p.name + ' Les Passionnés Motoneige">' +
+        '<img class="product-card-img" id="img-' + p.id + '" src="' + p.img + '" alt="' + p.name + '">' +
         '<div class="product-card-body">' +
           '<div class="product-card-name">' + p.name + '</div>' +
-          '<div class="product-card-price">' + fmt(p.price) + ' <span>/ pièce · XS–XL, +' + fmt(SURCHARGE) + ' pour 2XL–3XL</span></div>' +
+          audienceToggle +
+          '<div class="product-card-price">' + fmt(active.price) + ' <span>/ pièce · ' + sizeNote + '</span></div>' +
+          sizeChartLink +
+          colorSwatches +
           '<div class="product-row">' +
             '<select class="p-select" id="size-' + p.id + '">' + sizeOpts + '</select>' +
             '<div class="p-qty-wrap">' +
@@ -200,30 +285,67 @@ function renderProducts() {
   }).join('');
 }
 
+// ── SIZE CHART LIGHTBOX ───────────────────────────────────────────────────
+function openChart(src, name) {
+  document.getElementById('chart-modal-img').src = src;
+  document.getElementById('chart-modal-title').textContent = 'Guide des tailles — ' + name;
+  document.getElementById('chart-modal-overlay').classList.add('open');
+}
+function openChartFor(id) {
+  var prod = PRODUCTS.filter(function(p){ return p.id === id; })[0];
+  var src = prod.sizeChart, label = prod.name;
+  if (prod.colors) {
+    var cname = selectedColors[id] || prod.colors[0].name;
+    var c = prod.colors.filter(function(x){ return x.name === cname; })[0];
+    if (c && c.chart) { src = c.chart; label += ' ' + c.name; }
+  }
+  openChart(src, label);
+}
+function closeChart(e) {
+  if (e && e.target && e.target.id === 'chart-modal-img') return;
+  document.getElementById('chart-modal-overlay').classList.remove('open');
+}
+
 function stepQty(id, delta) {
   var el = document.getElementById('qty-' + id);
   var v = Math.max(1, (parseInt(el.value, 10) || 1) + delta);
   el.value = v;
 }
 
+function selectColor(id, colorName) {
+  selectedColors[id] = colorName;
+  var prod = PRODUCTS.filter(function(p){ return p.id === id; })[0];
+  var color = prod.colors.filter(function(c){ return c.name === colorName; })[0];
+  document.getElementById('img-' + id).src = color.img;
+
+  var swatches = document.querySelectorAll('.color-swatch[data-product="' + id + '"]');
+  swatches.forEach(function(sw) {
+    sw.classList.toggle('active', sw.getAttribute('data-color') === colorName);
+  });
+}
+
 // ── CART STATE ─────────────────────────────────────────────────────────
 var cart = [];
 try {
-  var saved = localStorage.getItem('motoneige-cart');
+  var saved = localStorage.getItem('passionnes-cart');
   if (saved) cart = JSON.parse(saved);
 } catch(e) { cart = []; }
 
 function saveCart() {
-  try { localStorage.setItem('motoneige-cart', JSON.stringify(cart)); } catch(e) {}
+  try { localStorage.setItem('passionnes-cart', JSON.stringify(cart)); } catch(e) {}
 }
 
 function addToCart(id) {
   var prod = PRODUCTS.filter(function(p){ return p.id === id; })[0];
+  var aud = selectedAudience[id] || 'adulte';
+  var actualId = id;
+  if (aud === 'kidz' && prod.kidzId) { actualId = prod.kidzId; prod = PRODUCTS.filter(function(p){ return p.id === actualId; })[0]; }
   var size = document.getElementById('size-' + id).value;
   var qty = Math.max(1, parseInt(document.getElementById('qty-' + id).value, 10) || 1);
-  var existing = cart.filter(function(it){ return it.id === id && it.size === size; })[0];
+  var color = prod.colors ? (selectedColors[id] || prod.colors[0].name) : null;
+  var existing = cart.filter(function(it){ return it.id === actualId && it.size === size && it.color === color; })[0];
   if (existing) { existing.qty += qty; }
-  else { cart.push({ id: id, name: prod.name, size: size, qty: qty }); }
+  else { cart.push({ id: actualId, name: prod.name, size: size, color: color, qty: qty }); }
   saveCart();
   renderCart();
 }
@@ -261,7 +383,7 @@ function renderCart() {
     return '' +
       '<div class="cart-item">' +
         '<div class="cart-item-top">' +
-          '<div><div class="cart-item-name">' + it.name + '</div><div class="cart-item-detail">Grandeur ' + it.size + ' · ' + fmt(unit) + '/pièce</div></div>' +
+          '<div><div class="cart-item-name">' + it.name + (it.color ? ' — ' + it.color : '') + '</div><div class="cart-item-detail">Grandeur ' + it.size + ' · ' + fmt(unit) + '/pièce</div></div>' +
           '<button class="cart-item-remove" onclick="removeFromCart(' + idx + ')">×</button>' +
         '</div>' +
         '<div class="cart-item-bottom">' +
@@ -271,13 +393,15 @@ function renderCart() {
       '</div>';
   }).join('');
 
-  var avantTaxes = subtotal + LIVRAISON;
+  var liv = livraison();
+  var avantTaxes = subtotal + liv;
   var tps = avantTaxes * TPS_RATE;
   var tvq = avantTaxes * TVQ_RATE;
   var total = avantTaxes + tps + tvq;
 
   document.getElementById('ct-subtotal').textContent = fmt(subtotal);
-  document.getElementById('ct-livraison').textContent = fmt(LIVRAISON);
+  document.getElementById('ct-livraison').textContent = fmt(liv);
+  document.getElementById('ct-livraison-label').textContent = horsQuebec() ? 'Livraison (hors Québec)' : 'Livraison (Québec)';
   document.getElementById('ct-tps').textContent = fmt(tps);
   document.getElementById('ct-tvq').textContent = fmt(tvq);
   document.getElementById('ct-total').textContent = fmt(total);
@@ -329,7 +453,16 @@ function checkout() {
     return;
   }
 
-  try { localStorage.setItem('motoneige-customer', JSON.stringify(customer)); } catch(e) {}
+  var confirmWrap = document.getElementById('size-confirm-wrap');
+  confirmWrap.classList.remove('field-error');
+  if (!document.getElementById('size-confirm').checked) {
+    confirmWrap.classList.add('field-error');
+    errEl.textContent = '❌ Coche la case confirmant que tu as vérifié le guide des tailles.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  try { localStorage.setItem('passionnes-customer', JSON.stringify(customer)); } catch(e) {}
 
   btn.disabled = true;
   btn.textContent = 'Redirection…';
@@ -357,7 +490,7 @@ renderCart();
 
 // Pré-remplir les coordonnées si déjà saisies avant (ex: retour après erreur)
 try {
-  var savedCustomer = JSON.parse(localStorage.getItem('motoneige-customer') || 'null');
+  var savedCustomer = JSON.parse(localStorage.getItem('passionnes-customer') || 'null');
   if (savedCustomer) {
     if (savedCustomer.name)       document.getElementById('cust-name').value       = savedCustomer.name;
     if (savedCustomer.email)      document.getElementById('cust-email').value      = savedCustomer.email;
@@ -366,6 +499,7 @@ try {
     if (savedCustomer.ville)      document.getElementById('cust-ville').value      = savedCustomer.ville;
     if (savedCustomer.codepostal) document.getElementById('cust-codepostal').value = savedCustomer.codepostal;
     if (savedCustomer.province)   document.getElementById('cust-province').value   = savedCustomer.province;
+    renderCart();
   }
 } catch(e) {}
 </script>

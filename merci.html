@@ -8,19 +8,20 @@
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',sans-serif;background:linear-gradient(160deg,#0d2b1f 0%,#163b27 60%,#0d2b1f 100%);color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
+body{font-family:'DM Sans',sans-serif;background:linear-gradient(160deg,#000000 0%,#1a1a1a 60%,#000000 100%);color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
 .card{max-width:440px}
 .emoji{font-size:48px;margin-bottom:16px}
+.merci-logo{max-width:300px;width:60%;margin:0 auto 18px;display:block}
 h1{font-family:'DM Serif Display',serif;font-size:30px;font-weight:400;margin-bottom:12px}
 p{font-size:14px;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:20px}
-a{display:inline-block;background:#c8a96e;color:#111110;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.05em}
+a{display:inline-block;background:#a95c35;color:#fff;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.05em}
 </style>
 </head>
 <body>
 <div class="card">
-  <div class="emoji">🏔️✅</div>
+  <img src="images/logo-passionnes.png" alt="Les Passionnés Motoneige" class="merci-logo">
   <h1>Merci pour ta commande!</h1>
-  <p>Ton paiement a été reçu. Un courriel de confirmation Stripe s'en vient. On prépare ta commande — Braaap!! Braaap!!</p>
+  <p>Ton paiement a été reçu. Un courriel de confirmation s'en vient. On prépare ta commande!</p>
   <a href="/">Retour à la boutique</a>
 </div>
 
@@ -37,13 +38,26 @@ var EMAILJS_TEMPLATE_ID = '4nasodg';
 
 // Même catalogue/prix que index.html, pour recalculer les mêmes totaux
 var PRODUCTS = {
-  hoodie:   { name: 'Hoodie',   price: 55.00 },
-  crewneck: { name: 'Crewneck', price: 45.00 },
-  tshirt:   { name: 'T-Shirt',  price: 30.00 }
+  "tshirt-coton": { name: "T-Shirt Coton", price: 30.00 },
+  "ml-coton": { name: "T-Shirt Manches Longues Coton", price: 35.00 },
+  "crewneck": { name: "Crewneck", price: 45.00 },
+  "hoodie-2": { name: "Hoodie 2 logos", price: 50.00 },
+  "hoodie-3": { name: "Hoodie 3 logos", price: 50.00 },
+  "hoodie-se": { name: "Hoodie Édition Spéciale 4 logos", price: 70.00 },
+  "tshirt-dryfit": { name: "T-Shirt Dryfit", price: 35.00 },
+  "ml-dryfit": { name: "T-Shirt Manches Longues Dryfit", price: 45.00 },
+  "tuque": { name: "Tuque", price: 29.00 },
+  "casquette": { name: "Casquette", price: 29.00 }
 };
-var BIG_SIZES = ['2XL', '3XL'];
+var BIG_SIZES = ['2XL', '3XL', '4XL'];
 var SURCHARGE = 5.00;
-var LIVRAISON = 15.00;
+// 15 $ au Québec, 25 $ hors Québec (même règle que index.html et la fonction Square)
+var LIVRAISON = (function () {
+  try {
+    var c = JSON.parse(localStorage.getItem('passionnes-customer') || '{}');
+    return (c.province && c.province !== 'Québec') ? 25.00 : 15.00;
+  } catch (e) { return 15.00; }
+})();
 var TPS_RATE = 0.05;
 var TVQ_RATE = 0.09975;
 
@@ -53,7 +67,7 @@ function unitPrice(prod, size) {
 
 function sendOrderNotification() {
   var raw;
-  try { raw = localStorage.getItem('motoneige-cart'); } catch (e) { raw = null; }
+  try { raw = localStorage.getItem('passionnes-cart'); } catch (e) { raw = null; }
   if (!raw) return; // rien à envoyer (ex: page rechargée après coup, ou visite directe)
 
   var cart;
@@ -61,20 +75,21 @@ function sendOrderNotification() {
   if (!Array.isArray(cart) || cart.length === 0) return;
 
   var subtotal = 0;
-  var ordres = cart.map(function (it) {
+  var orders = cart.map(function (it) {
     var prod = PRODUCTS[it.id];
     if (!prod) return null;
     var unit = unitPrice(prod, it.size);
     var lineTotal = unit * it.qty;
     subtotal += lineTotal;
     return {
-      nom: prod.name + ' — Grandeur ' + it.size,
+      name: prod.name + (it.color ? ' — ' + it.color : '') + ' — Grandeur ' + it.size,
+      nom:  prod.name + (it.color ? ' — ' + it.color : '') + ' — Grandeur ' + it.size,
       units: it.qty,
       price: lineTotal.toFixed(2)
     };
   }).filter(Boolean);
 
-  if (ordres.length === 0) return;
+  if (orders.length === 0) return;
 
   var avantTaxes = subtotal + LIVRAISON;
   var tps = avantTaxes * TPS_RATE;
@@ -82,35 +97,44 @@ function sendOrderNotification() {
   var taxes = tps + tvq;
 
   var qp = window.location.search ? new URLSearchParams(window.location.search) : null;
-  var sessionId = qp ? qp.get('session_id') : null;
+  var sessionId = qp ? (qp.get('session_id') || qp.get('orderId') || qp.get('transactionId')) : null;
   var orderId = sessionId ? sessionId.slice(-8).toUpperCase() : Date.now().toString().slice(-8);
 
   var customer = {};
-  try { customer = JSON.parse(localStorage.getItem('motoneige-customer') || '{}'); } catch (e) {}
+  try { customer = JSON.parse(localStorage.getItem('passionnes-customer') || '{}'); } catch (e) {}
 
   var templateParams = {
     order_id: orderId,
-    ordres: ordres,
+    orders: orders,
+    ordres: orders,
     client_name: customer.name || '',
     client_email: customer.email || '',
     client_phone: customer.phone || '',
     client_address: [customer.adresse, customer.ville, customer.province, customer.codepostal].filter(Boolean).join(', '),
+    customer_name: customer.name || '',
+    customer_address: customer.adresse || '',
+    customer_city: [customer.ville, customer.province].filter(Boolean).join(', '),
+    customer_CP: customer.codepostal || '',
+    customer_phone: customer.phone || '',
+    email: customer.email || '',
+    shipping_method: 'Transporteur',
     cost: {
       shipping: LIVRAISON.toFixed(2),
-      tax: taxes.toFixed(2)
+      tax: taxes.toFixed(2),
+      total: (avantTaxes + taxes).toFixed(2)
     }
   };
 
   emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
     .then(function () {
       try {
-        localStorage.removeItem('motoneige-cart');
-        localStorage.removeItem('motoneige-customer');
+        localStorage.removeItem('passionnes-cart');
+        localStorage.removeItem('passionnes-customer');
       } catch (e) {}
     })
     .catch(function (err) {
       // Silencieux pour le client — il a déjà payé et vu la confirmation.
-      // (Stripe reste la source de vérité pour la commande.)
+      // (Square reste la source de vérité pour la commande.)
       console.error('Notification de commande non envoyée:', err);
     });
 }
