@@ -51,12 +51,26 @@ var PRODUCTS = {
 };
 var BIG_SIZES = ['2XL', '3XL', '4XL'];
 var SURCHARGE = 5.00;
-// 15 $ au Québec, 25 $ hors Québec (même règle que index.html et la fonction Square)
+var LIVRAISON_STANDARD = 15.00;   // Québec
+var LIVRAISON_HORS_QC  = 25.00;   // autres provinces
+// Régions éloignées : selon les 3 premiers caractères du code postal
+var ZONES_LIVRAISON = [
+  { nom: 'Îles-de-la-Madeleine', codes: ['G4T'], prix: 45.00 },
+  { nom: 'Basse-Côte-Nord',      codes: ['G0G'], prix: 98.00 },
+  { nom: 'Nunavik',              codes: ['J0M'], prix: 190.00 },
+  { nom: 'Baie-James',           codes: ['G8P', 'G0W', 'J0Y'], prix: 25.00 }
+];
+function zoneLivraison(codePostal) {
+  var fsa = String(codePostal || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 3);
+  for (var i = 0; i < ZONES_LIVRAISON.length; i++) {
+    if (ZONES_LIVRAISON[i].codes.indexOf(fsa) !== -1) return ZONES_LIVRAISON[i];
+  }
+  if (fsa.length < 3 || /^[GHJ]/.test(fsa)) return { nom: 'Québec', prix: LIVRAISON_STANDARD };
+  return { nom: 'Hors Québec', prix: LIVRAISON_HORS_QC };
+}
 var LIVRAISON = (function () {
-  try {
-    var c = JSON.parse(localStorage.getItem('passionnes-customer') || '{}');
-    return (c.province && c.province !== 'Québec') ? 25.00 : 15.00;
-  } catch (e) { return 15.00; }
+  try { return zoneLivraison(JSON.parse(localStorage.getItem('passionnes-customer') || '{}').codepostal).prix; }
+  catch (e) { return LIVRAISON_STANDARD; }
 })();
 var TPS_RATE = 0.05;
 var TVQ_RATE = 0.09975;

@@ -150,7 +150,7 @@ footer{text-align:center;font-size:11px;color:var(--gray-500);padding:24px;borde
       </div>
       <div class="field-group">
         <label class="field-label">Code postal *</label>
-        <input type="text" class="field-input" id="cust-codepostal" placeholder="J2L 1A1" maxlength="7">
+        <input type="text" class="field-input" id="cust-codepostal" placeholder="J2L 1A1" maxlength="7" oninput="renderCart()">
       </div>
     </div>
     <div class="field-group">
@@ -183,7 +183,7 @@ footer{text-align:center;font-size:11px;color:var(--gray-500);padding:24px;borde
     <label class="size-confirm" id="size-confirm-wrap"><input type="checkbox" id="size-confirm"><span>J'ai consulté le guide des tailles et je confirme les grandeurs de ma commande. *</span></label>
     <button class="checkout-btn" id="checkout-btn" onclick="checkout()" disabled>Payer maintenant</button>
     <div class="checkout-error" id="checkout-error"></div>
-    <div class="checkout-note">Livraison : 15 $ au Québec · 25 $ hors Québec. Taxes incluses dans le total ci-dessus. Paiement sécurisé par Square.</div>
+    <div class="checkout-note">Livraison : 15 $ au Québec · 25 $ hors Québec · tarif ajusté pour les régions éloignées, selon le code postal. Taxes incluses dans le total ci-dessus. Paiement sécurisé par Square.</div>
   </aside>
 </div>
 
@@ -211,10 +211,23 @@ var PRODUCTS = [
 ];
 var BIG_SIZES = ['2XL','3XL','4XL'];
 var SURCHARGE = 5.00;
-var LIVRAISON_QC = 15.00;
-var LIVRAISON_HORS_QC = 25.00;
-function horsQuebec(){ var p = document.getElementById('cust-province').value; return !!p && p !== 'Québec'; }
-function livraison(){ return horsQuebec() ? LIVRAISON_HORS_QC : LIVRAISON_QC; }
+var LIVRAISON_STANDARD = 15.00;   // Québec
+var LIVRAISON_HORS_QC  = 25.00;   // autres provinces
+// Régions éloignées : selon les 3 premiers caractères du code postal
+var ZONES_LIVRAISON = [
+  { nom: 'Îles-de-la-Madeleine', codes: ['G4T'], prix: 45.00 },
+  { nom: 'Basse-Côte-Nord',      codes: ['G0G'], prix: 98.00 },
+  { nom: 'Nunavik',              codes: ['J0M'], prix: 190.00 },
+  { nom: 'Baie-James',           codes: ['G8P', 'G0W', 'J0Y'], prix: 25.00 }
+];
+function zoneLivraison(codePostal) {
+  var fsa = String(codePostal || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 3);
+  for (var i = 0; i < ZONES_LIVRAISON.length; i++) {
+    if (ZONES_LIVRAISON[i].codes.indexOf(fsa) !== -1) return ZONES_LIVRAISON[i];
+  }
+  if (fsa.length < 3 || /^[GHJ]/.test(fsa)) return { nom: 'Québec', prix: LIVRAISON_STANDARD };
+  return { nom: 'Hors Québec', prix: LIVRAISON_HORS_QC };
+}
 var TPS_RATE = 0.05;
 var TVQ_RATE = 0.09975;
 
@@ -393,7 +406,8 @@ function renderCart() {
       '</div>';
   }).join('');
 
-  var liv = livraison();
+  var zone = zoneLivraison(document.getElementById('cust-codepostal').value);
+  var liv = zone.prix;
   var avantTaxes = subtotal + liv;
   var tps = avantTaxes * TPS_RATE;
   var tvq = avantTaxes * TVQ_RATE;
@@ -401,7 +415,7 @@ function renderCart() {
 
   document.getElementById('ct-subtotal').textContent = fmt(subtotal);
   document.getElementById('ct-livraison').textContent = fmt(liv);
-  document.getElementById('ct-livraison-label').textContent = horsQuebec() ? 'Livraison (hors Québec)' : 'Livraison (Québec)';
+  document.getElementById('ct-livraison-label').textContent = 'Livraison (' + zone.nom + ')';
   document.getElementById('ct-tps').textContent = fmt(tps);
   document.getElementById('ct-tvq').textContent = fmt(tvq);
   document.getElementById('ct-total').textContent = fmt(total);
@@ -435,7 +449,7 @@ function validateCustomer(customer) {
   if (!emailOk) { document.getElementById('cust-email').classList.add('field-error'); ok = false; }
   if (!customer.adresse) { document.getElementById('cust-adresse').classList.add('field-error'); ok = false; }
   if (!customer.ville) { document.getElementById('cust-ville').classList.add('field-error'); ok = false; }
-  if (!customer.codepostal) { document.getElementById('cust-codepostal').classList.add('field-error'); ok = false; }
+  if (!/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/.test(customer.codepostal)) { document.getElementById('cust-codepostal').classList.add('field-error'); ok = false; }
   if (!customer.province) { document.getElementById('cust-province').classList.add('field-error'); ok = false; }
   return ok;
 }

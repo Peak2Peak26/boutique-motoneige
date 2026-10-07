@@ -31,9 +31,24 @@ const PRODUCTS = {
 };
 const BIG_SIZES = ['2XL', '3XL', '4XL'];
 const SURCHARGE_CENTS = 500; // +5,00 $ pour 2XL / 3XL / 4XL
-// Doit être identique à index.html et merci.html
-const LIVRAISON_QC_CENTS = 1500;      // 15,00 $ au Québec
-const LIVRAISON_HORS_QC_CENTS = 2500; // 25,00 $ hors Québec
+// Livraison en cents — mêmes zones que index.html et merci.html
+const LIVRAISON_STANDARD = 1500;   // Québec
+const LIVRAISON_HORS_QC  = 2500;   // autres provinces
+// Régions éloignées : selon les 3 premiers caractères du code postal
+const ZONES_LIVRAISON = [
+  { nom: 'Îles-de-la-Madeleine', codes: ['G4T'], prix: 4500 },
+  { nom: 'Basse-Côte-Nord',      codes: ['G0G'], prix: 9800 },
+  { nom: 'Nunavik',              codes: ['J0M'], prix: 19000 },
+  { nom: 'Baie-James',           codes: ['G8P', 'G0W', 'J0Y'], prix: 2500 }
+];
+function zoneLivraison(codePostal) {
+  const fsa = String(codePostal || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 3);
+  for (let i = 0; i < ZONES_LIVRAISON.length; i++) {
+    if (ZONES_LIVRAISON[i].codes.indexOf(fsa) !== -1) return ZONES_LIVRAISON[i];
+  }
+  if (fsa.length < 3 || /^[GHJ]/.test(fsa)) return { nom: 'Québec', prix: LIVRAISON_STANDARD };
+  return { nom: 'Hors Québec', prix: LIVRAISON_HORS_QC };
+}
 const TPS_RATE = 0.05;
 const TVQ_RATE = 0.09975;
 
@@ -58,13 +73,13 @@ exports.handler = async function (event) {
     return { statusCode: 400, body: JSON.stringify({ error: 'Le panier est vide' }) };
   }
   if (!customer.name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email || '') ||
-      !customer.adresse || !customer.ville || !customer.codepostal || !customer.province) {
+      !customer.adresse || !customer.ville || !/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/.test(customer.codepostal || '') || !customer.province) {
     return { statusCode: 400, body: JSON.stringify({ error: 'Coordonnées client incomplètes' }) };
   }
 
   try {
-    const horsQuebec = customer.province !== 'Québec';
-    const LIVRAISON_CENTS = horsQuebec ? LIVRAISON_HORS_QC_CENTS : LIVRAISON_QC_CENTS;
+    const zone = zoneLivraison(customer.codepostal);
+    const LIVRAISON_CENTS = zone.prix;
     const line_items = items.map(function (it) {
       const prod = PRODUCTS[it.id];
       if (!prod) throw new Error('Produit inconnu : ' + it.id);
@@ -94,7 +109,7 @@ exports.handler = async function (event) {
     const tvqCents = Math.round(avantTaxesCents * TVQ_RATE);
 
     line_items.push({
-      name: horsQuebec ? 'Livraison (hors Québec)' : 'Livraison (Québec)',
+      name: 'Livraison (' + zone.nom + ')',
       quantity: '1',
       base_price_money: { amount: LIVRAISON_CENTS, currency: 'CAD' }
     });
