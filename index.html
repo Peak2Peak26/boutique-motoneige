@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Boutique – Les Passionnés Motoneige</title>
+<meta name="description" content="Vêtements et accessoires officiels Les Passionnés Motoneige. Paiement sécurisé en ligne, livraison partout au Québec.">
+<!-- Aperçu lors d'un partage (Facebook, Messenger, etc.) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://lespassionnes-braaap-braaap.netlify.app/">
+<meta property="og:title" content="Boutique – Les Passionnés Motoneige">
+<meta property="og:description" content="Vêtements et accessoires officiels du groupe. Braaap!! Braaap!!">
+<meta property="og:image" content="https://lespassionnes-braaap-braaap.netlify.app/images/partage-facebook.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="fr_CA">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
@@ -120,7 +130,7 @@ footer{text-align:center;font-size:11px;color:var(--gray-500);padding:24px;borde
 </header>
 
 <section class="hero">
-  <img src="images/logo-passionnes.png" alt="Les Passionnés Motoneige" class="hero-logo">
+  <img src="images/logo-passionnes-v2.png" alt="Les Passionnés Motoneige" class="hero-logo">
   <h1>Collection officielle</h1>
   <p>Braaap!! Braaap!! — vêtements et accessoires du groupe</p>
 </section>
@@ -199,14 +209,15 @@ footer{text-align:center;font-size:11px;color:var(--gray-500);padding:24px;borde
 // ── CATALOGUE ──────────────────────────────────────────────────────────────
 var PRODUCTS = [
   {"id": "tshirt-coton", "name": "T-Shirt Coton", "price": 30.0, "img": "images/tshirt-coton.webp", "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-tshirt-coton.webp"},
-  {"id": "ml-coton", "name": "T-Shirt Manches Longues Coton", "price": 35.0, "img": "images/ml-coton.webp", "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-ml-coton.webp"},
-  {"id": "crewneck", "name": "Crewneck", "price": 45.0, "img": "images/crewneck.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-crewneck.webp"},
-  {"id": "hoodie-2", "name": "Hoodie 2 logos", "price": 50.0, "img": "images/hoodie-2-logos-v2.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-hoodie.webp"},
-  {"id": "hoodie-se", "name": "Hoodie Édition Spéciale 4 logos", "price": 70.0, "img": "images/hoodie-se-noir.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-hoodie-se.webp", "colors": [{"name": "Noir", "img": "images/hoodie-se-noir.webp"}, {"name": "Moss", "img": "images/hoodie-se-moss.webp"}]},
+  {"id": "ml-coton", "name": "T-Shirt Manches Longues Coton", "price": 40.0, "img": "images/ml-coton.webp", "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-ml-coton.webp"},
+  {"id": "crewneck", "name": "Crewneck", "price": 50.0, "img": "images/crewneck.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-crewneck.webp"},
+  {"id": "hoodie-2", "name": "Hoodie", "price": 55.0, "img": "images/hoodie-2-logos-v2.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-hoodie.webp"},
+  {"id": "hoodie-se", "name": "Hoodie Édition Spéciale 4 logos", "price": 75.0, "img": "images/hoodie-se-noir.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-hoodie-se.webp", "colors": [{"name": "Noir", "img": "images/hoodie-se-noir.webp"}, {"name": "Moss", "img": "images/hoodie-se-moss.webp"}]},
   {"id": "tshirt-dryfit", "name": "T-Shirt Dryfit", "price": 35.0, "img": "images/tshirt-dryfit-homme.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-tshirt-dryfit-homme.webp", "colors": [{"name": "Homme", "img": "images/tshirt-dryfit-homme.webp", "chart": "images/chart-tshirt-dryfit-homme.webp"}, {"name": "Femme", "img": "images/tshirt-dryfit-femme.webp", "chart": "images/chart-tshirt-dryfit-femme.webp"}]},
   {"id": "ml-dryfit", "name": "T-Shirt Manches Longues Dryfit", "price": 45.0, "img": "images/ml-dryfit-homme.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-ml-dryfit-homme.webp", "colors": [{"name": "Homme", "img": "images/ml-dryfit-homme.webp", "chart": "images/chart-ml-dryfit-homme.webp"}, {"name": "Femme", "img": "images/ml-dryfit-femme.webp", "chart": "images/chart-ml-dryfit-femme.webp"}]},
-  {"id": "tuque", "name": "Tuque", "price": 29.0, "img": "images/tuque.webp", "sizes": ["Unique"]},
-  {"id": "casquette", "name": "Casquette", "price": 29.0, "img": "images/casquette.webp", "sizes": ["Unique"]}
+  {"id": "tuque", "name": "Tuque", "price": 30.0, "img": "images/tuque.webp", "sizes": ["Unique"]},
+  {"id": "casquette", "name": "Casquette", "price": 35.0, "img": "images/casquette.webp", "sizes": ["Unique"]},
+  {"id": "casquette-flexfit", "name": "Casquette Flexfit", "price": 39.0, "img": "images/casquette-flexfit.webp", "sizes": ["S/M", "L/XL"]}
 ];
 var BIG_SIZES = ['2XL','3XL','4XL'];
 var SURCHARGE = 5.00;

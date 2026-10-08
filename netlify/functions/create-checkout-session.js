@@ -19,14 +19,15 @@ const SQUARE_API_BASE = process.env.SQUARE_ENV === 'sandbox'
 // par le navigateur, pour éviter qu'un client modifie le prix côté client).
 const PRODUCTS = {
   "tshirt-coton": { name: "T-Shirt Coton — Les Passionnés Motoneige", base: 3000, sizes: ["S", "M", "L", "XL", "2XL", "3XL", "4XL"] },
-  "ml-coton": { name: "T-Shirt Manches Longues Coton — Les Passionnés Motoneige", base: 3500, sizes: ["S", "M", "L", "XL", "2XL", "3XL", "4XL"] },
-  "crewneck": { name: "Crewneck — Les Passionnés Motoneige", base: 4500, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"] },
-  "hoodie-2": { name: "Hoodie 2 logos — Les Passionnés Motoneige", base: 5000, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"] },
-  "hoodie-se": { name: "Hoodie Édition Spéciale 4 logos — Les Passionnés Motoneige", base: 7000, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], colors: ["Noir", "Moss"] },
+  "ml-coton": { name: "T-Shirt Manches Longues Coton — Les Passionnés Motoneige", base: 4000, sizes: ["S", "M", "L", "XL", "2XL", "3XL", "4XL"] },
+  "crewneck": { name: "Crewneck — Les Passionnés Motoneige", base: 5000, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"] },
+  "hoodie-2": { name: "Hoodie — Les Passionnés Motoneige", base: 5500, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"] },
+  "hoodie-se": { name: "Hoodie Édition Spéciale 4 logos — Les Passionnés Motoneige", base: 7500, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], colors: ["Noir", "Moss"] },
   "tshirt-dryfit": { name: "T-Shirt Dryfit — Les Passionnés Motoneige", base: 3500, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], colors: ["Homme", "Femme"] },
   "ml-dryfit": { name: "T-Shirt Manches Longues Dryfit — Les Passionnés Motoneige", base: 4500, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], colors: ["Homme", "Femme"] },
-  "tuque": { name: "Tuque — Les Passionnés Motoneige", base: 2900, sizes: ["Unique"] },
-  "casquette": { name: "Casquette — Les Passionnés Motoneige", base: 2900, sizes: ["Unique"] }
+  "tuque": { name: "Tuque — Les Passionnés Motoneige", base: 3000, sizes: ["Unique"] },
+  "casquette": { name: "Casquette — Les Passionnés Motoneige", base: 3500, sizes: ["Unique"] },
+  "casquette-flexfit": { name: "Casquette Flexfit — Les Passionnés Motoneige", base: 3900, sizes: ["S/M", "L/XL"] }
 };
 const BIG_SIZES = ['2XL', '3XL', '4XL'];
 const SURCHARGE_CENTS = 500; // +5,00 $ pour 2XL / 3XL / 4XL
