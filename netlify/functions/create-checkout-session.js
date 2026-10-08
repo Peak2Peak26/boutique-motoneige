@@ -22,7 +22,6 @@ const PRODUCTS = {
   "ml-coton": { name: "T-Shirt Manches Longues Coton — Les Passionnés Motoneige", base: 3500, sizes: ["S", "M", "L", "XL", "2XL", "3XL", "4XL"] },
   "crewneck": { name: "Crewneck — Les Passionnés Motoneige", base: 4500, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"] },
   "hoodie-2": { name: "Hoodie 2 logos — Les Passionnés Motoneige", base: 5000, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"] },
-  "hoodie-3": { name: "Hoodie 3 logos — Les Passionnés Motoneige", base: 5000, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"] },
   "hoodie-se": { name: "Hoodie Édition Spéciale 4 logos — Les Passionnés Motoneige", base: 7000, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], colors: ["Noir", "Moss"] },
   "tshirt-dryfit": { name: "T-Shirt Dryfit — Les Passionnés Motoneige", base: 3500, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], colors: ["Homme", "Femme"] },
   "ml-dryfit": { name: "T-Shirt Manches Longues Dryfit — Les Passionnés Motoneige", base: 4500, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], colors: ["Homme", "Femme"] },
