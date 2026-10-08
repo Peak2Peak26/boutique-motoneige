@@ -34,20 +34,29 @@ const SURCHARGE_CENTS = 500; // +5,00 $ pour 2XL / 3XL / 4XL
 // Livraison en cents — mêmes zones que index.html et merci.html
 const LIVRAISON_STANDARD = 1500;   // Québec
 const LIVRAISON_HORS_QC  = 2500;   // autres provinces
+const LIVRAISON_USA      = 3500;   // États-Unis (aucune TPS/TVQ : vente expédiée hors Canada)
 // Régions éloignées : selon les 3 premiers caractères du code postal
 const ZONES_LIVRAISON = [
   { nom: 'Îles-de-la-Madeleine', codes: ['G4T'], prix: 4500 },
   { nom: 'Basse-Côte-Nord',      codes: ['G0G'], prix: 9800 },
   { nom: 'Nunavik',              codes: ['J0M'], prix: 19000 },
-  { nom: 'Baie-James',           codes: ['G8P', 'G0W', 'J0Y'], prix: 2500 }
+  { nom: 'Baie-James',           codes: ['G8P'], prix: 2500 },
+  { nom: 'Région éloignée',      codes: ['G0W'], prix: 5000 },
+  { nom: 'Région éloignée',      codes: ['J0Y'], prix: 1500 }
 ];
-function zoneLivraison(codePostal) {
+function zoneLivraison(codePostal, province) {
+  if (province === 'États-Unis') return { nom: 'États-Unis', prix: LIVRAISON_USA, export: true };
   const fsa = String(codePostal || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 3);
   for (let i = 0; i < ZONES_LIVRAISON.length; i++) {
     if (ZONES_LIVRAISON[i].codes.indexOf(fsa) !== -1) return ZONES_LIVRAISON[i];
   }
   if (fsa.length < 3 || /^[GHJ]/.test(fsa)) return { nom: 'Québec', prix: LIVRAISON_STANDARD };
   return { nom: 'Hors Québec', prix: LIVRAISON_HORS_QC };
+}
+function codePostalValide(cp, province) {
+  cp = String(cp || '').trim();
+  if (province === 'États-Unis') return /^\d{5}(-\d{4})?$/.test(cp);   // ZIP américain
+  return /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/.test(cp);         // code postal canadien
 }
 const TPS_RATE = 0.05;
 const TVQ_RATE = 0.09975;
@@ -73,12 +82,12 @@ exports.handler = async function (event) {
     return { statusCode: 400, body: JSON.stringify({ error: 'Le panier est vide' }) };
   }
   if (!customer.name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email || '') ||
-      !customer.adresse || !customer.ville || !/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/.test(customer.codepostal || '') || !customer.province) {
+      !customer.adresse || !customer.ville || !codePostalValide(customer.codepostal, customer.province) || !customer.province) {
     return { statusCode: 400, body: JSON.stringify({ error: 'Coordonnées client incomplètes' }) };
   }
 
   try {
-    const zone = zoneLivraison(customer.codepostal);
+    const zone = zoneLivraison(customer.codepostal, customer.province);
     const LIVRAISON_CENTS = zone.prix;
     const line_items = items.map(function (it) {
       const prod = PRODUCTS[it.id];
@@ -105,24 +114,27 @@ exports.handler = async function (event) {
       return s + li.base_price_money.amount * parseInt(li.quantity, 10);
     }, 0);
     const avantTaxesCents = subtotalCents + LIVRAISON_CENTS;
-    const tpsCents = Math.round(avantTaxesCents * TPS_RATE);
-    const tvqCents = Math.round(avantTaxesCents * TVQ_RATE);
+    const tpsCents = zone.export ? 0 : Math.round(avantTaxesCents * TPS_RATE);
+    const tvqCents = zone.export ? 0 : Math.round(avantTaxesCents * TVQ_RATE);
 
     line_items.push({
       name: 'Livraison (' + zone.nom + ')',
       quantity: '1',
       base_price_money: { amount: LIVRAISON_CENTS, currency: 'CAD' }
     });
-    line_items.push({
-      name: 'TPS (5%)',
-      quantity: '1',
-      base_price_money: { amount: tpsCents, currency: 'CAD' }
-    });
-    line_items.push({
-      name: 'TVQ (9,975%)',
-      quantity: '1',
-      base_price_money: { amount: tvqCents, currency: 'CAD' }
-    });
+    // Aucune TPS/TVQ sur une vente expédiée aux États-Unis
+    if (!zone.export) {
+      line_items.push({
+        name: 'TPS (5%)',
+        quantity: '1',
+        base_price_money: { amount: tpsCents, currency: 'CAD' }
+      });
+      line_items.push({
+        name: 'TVQ (9,975%)',
+        quantity: '1',
+        base_price_money: { amount: tvqCents, currency: 'CAD' }
+      });
+    }
 
     const siteUrl = process.env.URL || 'https://lespassionnes-braaap-braaap.netlify.app';
 

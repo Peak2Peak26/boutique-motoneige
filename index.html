@@ -171,6 +171,7 @@ footer{text-align:center;font-size:11px;color:var(--gray-500);padding:24px;borde
         <option>Alberta</option><option>Manitoba</option><option>Saskatchewan</option>
         <option>Nouvelle-Écosse</option><option>Nouveau-Brunswick</option><option>Terre-Neuve</option>
         <option>Île-du-Prince-Édouard</option>
+        <option>États-Unis</option>
       </select>
     </div>
     <div class="field-group">
@@ -193,7 +194,7 @@ footer{text-align:center;font-size:11px;color:var(--gray-500);padding:24px;borde
     <label class="size-confirm" id="size-confirm-wrap"><input type="checkbox" id="size-confirm"><span>J'ai consulté le guide des tailles et je confirme les grandeurs de ma commande. *</span></label>
     <button class="checkout-btn" id="checkout-btn" onclick="checkout()" disabled>Payer maintenant</button>
     <div class="checkout-error" id="checkout-error"></div>
-    <div class="checkout-note">Livraison : 15 $ au Québec · 25 $ hors Québec · tarif ajusté pour les régions éloignées, selon le code postal. Taxes incluses dans le total ci-dessus. Paiement sécurisé par Square.</div>
+    <div class="checkout-note">Livraison : 15 $ au Québec · 25 $ hors Québec · 35 $ aux États-Unis (sans taxes) · tarif ajusté pour les régions éloignées, selon le code postal. Taxes incluses dans le total ci-dessus. Paiement sécurisé par Square.</div>
   </aside>
 </div>
 
@@ -223,20 +224,29 @@ var BIG_SIZES = ['2XL','3XL','4XL'];
 var SURCHARGE = 5.00;
 var LIVRAISON_STANDARD = 15.00;   // Québec
 var LIVRAISON_HORS_QC  = 25.00;   // autres provinces
+var LIVRAISON_USA      = 35.00;   // États-Unis (aucune TPS/TVQ : vente expédiée hors Canada)
 // Régions éloignées : selon les 3 premiers caractères du code postal
 var ZONES_LIVRAISON = [
   { nom: 'Îles-de-la-Madeleine', codes: ['G4T'], prix: 45.00 },
   { nom: 'Basse-Côte-Nord',      codes: ['G0G'], prix: 98.00 },
   { nom: 'Nunavik',              codes: ['J0M'], prix: 190.00 },
-  { nom: 'Baie-James',           codes: ['G8P', 'G0W', 'J0Y'], prix: 25.00 }
+  { nom: 'Baie-James',           codes: ['G8P'], prix: 25.00 },
+  { nom: 'Région éloignée',      codes: ['G0W'], prix: 50.00 },
+  { nom: 'Région éloignée',      codes: ['J0Y'], prix: 15.00 }
 ];
-function zoneLivraison(codePostal) {
+function zoneLivraison(codePostal, province) {
+  if (province === 'États-Unis') return { nom: 'États-Unis', prix: LIVRAISON_USA, export: true };
   var fsa = String(codePostal || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 3);
   for (var i = 0; i < ZONES_LIVRAISON.length; i++) {
     if (ZONES_LIVRAISON[i].codes.indexOf(fsa) !== -1) return ZONES_LIVRAISON[i];
   }
   if (fsa.length < 3 || /^[GHJ]/.test(fsa)) return { nom: 'Québec', prix: LIVRAISON_STANDARD };
   return { nom: 'Hors Québec', prix: LIVRAISON_HORS_QC };
+}
+function codePostalValide(cp, province) {
+  cp = String(cp || '').trim();
+  if (province === 'États-Unis') return /^\d{5}(-\d{4})?$/.test(cp);   // ZIP américain
+  return /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/.test(cp);         // code postal canadien
 }
 var TPS_RATE = 0.05;
 var TVQ_RATE = 0.09975;
@@ -416,11 +426,11 @@ function renderCart() {
       '</div>';
   }).join('');
 
-  var zone = zoneLivraison(document.getElementById('cust-codepostal').value);
+  var zone = zoneLivraison(document.getElementById('cust-codepostal').value, document.getElementById('cust-province').value);
   var liv = zone.prix;
   var avantTaxes = subtotal + liv;
-  var tps = avantTaxes * TPS_RATE;
-  var tvq = avantTaxes * TVQ_RATE;
+  var tps = zone.export ? 0 : avantTaxes * TPS_RATE;
+  var tvq = zone.export ? 0 : avantTaxes * TVQ_RATE;
   var total = avantTaxes + tps + tvq;
 
   document.getElementById('ct-subtotal').textContent = fmt(subtotal);
@@ -459,7 +469,7 @@ function validateCustomer(customer) {
   if (!emailOk) { document.getElementById('cust-email').classList.add('field-error'); ok = false; }
   if (!customer.adresse) { document.getElementById('cust-adresse').classList.add('field-error'); ok = false; }
   if (!customer.ville) { document.getElementById('cust-ville').classList.add('field-error'); ok = false; }
-  if (!/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/.test(customer.codepostal)) { document.getElementById('cust-codepostal').classList.add('field-error'); ok = false; }
+  if (!codePostalValide(customer.codepostal, customer.province)) { document.getElementById('cust-codepostal').classList.add('field-error'); ok = false; }
   if (!customer.province) { document.getElementById('cust-province').classList.add('field-error'); ok = false; }
   return ok;
 }

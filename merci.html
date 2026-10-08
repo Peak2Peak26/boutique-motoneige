@@ -53,14 +53,18 @@ var BIG_SIZES = ['2XL', '3XL', '4XL'];
 var SURCHARGE = 5.00;
 var LIVRAISON_STANDARD = 15.00;   // Québec
 var LIVRAISON_HORS_QC  = 25.00;   // autres provinces
+var LIVRAISON_USA      = 35.00;   // États-Unis (aucune TPS/TVQ : vente expédiée hors Canada)
 // Régions éloignées : selon les 3 premiers caractères du code postal
 var ZONES_LIVRAISON = [
   { nom: 'Îles-de-la-Madeleine', codes: ['G4T'], prix: 45.00 },
   { nom: 'Basse-Côte-Nord',      codes: ['G0G'], prix: 98.00 },
   { nom: 'Nunavik',              codes: ['J0M'], prix: 190.00 },
-  { nom: 'Baie-James',           codes: ['G8P', 'G0W', 'J0Y'], prix: 25.00 }
+  { nom: 'Baie-James',           codes: ['G8P'], prix: 25.00 },
+  { nom: 'Région éloignée',      codes: ['G0W'], prix: 50.00 },
+  { nom: 'Région éloignée',      codes: ['J0Y'], prix: 15.00 }
 ];
-function zoneLivraison(codePostal) {
+function zoneLivraison(codePostal, province) {
+  if (province === 'États-Unis') return { nom: 'États-Unis', prix: LIVRAISON_USA, export: true };
   var fsa = String(codePostal || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 3);
   for (var i = 0; i < ZONES_LIVRAISON.length; i++) {
     if (ZONES_LIVRAISON[i].codes.indexOf(fsa) !== -1) return ZONES_LIVRAISON[i];
@@ -68,9 +72,17 @@ function zoneLivraison(codePostal) {
   if (fsa.length < 3 || /^[GHJ]/.test(fsa)) return { nom: 'Québec', prix: LIVRAISON_STANDARD };
   return { nom: 'Hors Québec', prix: LIVRAISON_HORS_QC };
 }
+function codePostalValide(cp, province) {
+  cp = String(cp || '').trim();
+  if (province === 'États-Unis') return /^\d{5}(-\d{4})?$/.test(cp);   // ZIP américain
+  return /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/.test(cp);         // code postal canadien
+}
 var LIVRAISON = (function () {
-  try { return zoneLivraison(JSON.parse(localStorage.getItem('passionnes-customer') || '{}').codepostal).prix; }
+  try { var c = JSON.parse(localStorage.getItem('passionnes-customer') || '{}'); return zoneLivraison(c.codepostal, c.province).prix; }
   catch (e) { return LIVRAISON_STANDARD; }
+})();
+var VENTE_EXPORT = (function () {
+  try { return JSON.parse(localStorage.getItem('passionnes-customer') || '{}').province === 'États-Unis'; } catch (e) { return false; }
 })();
 var TPS_RATE = 0.05;
 var TVQ_RATE = 0.09975;
@@ -106,8 +118,8 @@ function sendOrderNotification() {
   if (orders.length === 0) return;
 
   var avantTaxes = subtotal + LIVRAISON;
-  var tps = avantTaxes * TPS_RATE;
-  var tvq = avantTaxes * TVQ_RATE;
+  var tps = VENTE_EXPORT ? 0 : avantTaxes * TPS_RATE;
+  var tvq = VENTE_EXPORT ? 0 : avantTaxes * TVQ_RATE;
   var taxes = tps + tvq;
 
   var qp = window.location.search ? new URLSearchParams(window.location.search) : null;
