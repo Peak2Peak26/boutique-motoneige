@@ -121,12 +121,39 @@ body{font-family:'DM Sans',sans-serif;color:var(--black);background:var(--white)
 .size-confirm input{margin-top:2px;width:16px;height:16px;flex:none;accent-color:var(--accent)}
 .size-confirm.field-error{border-color:var(--red);background:var(--red-light)}
 footer{text-align:center;font-size:11px;color:var(--gray-500);padding:24px;border-top:1px solid var(--gray-100)}
+
+/* NOUS JOINDRE */
+:root{--charbon:var(--black);--gris-sport:var(--accent)}
+html{scroll-behavior:smooth}
+.site-nav a{color:var(--white);text-decoration:none;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:8px 14px;border:1.5px solid rgba(255,255,255,0.3);border-radius:99px}
+.site-nav a:hover{border-color:var(--gris-sport)}
+.contact-section{max-width:1180px;margin:0 auto;padding:0 24px 72px;scroll-margin-top:16px}
+.contact-card{background:var(--white);border:1.5px solid var(--gray-100);border-radius:var(--radius-lg);display:grid;grid-template-columns:1fr 1.4fr;overflow:hidden}
+.contact-info{background:var(--charbon);color:var(--white);padding:28px;display:flex;flex-direction:column;gap:18px}
+.contact-info h2,.contact-form h2{font-family:'DM Serif Display',serif;font-size:24px;font-weight:400}
+.contact-info p.lead{font-size:13px;color:rgba(255,255,255,0.7);line-height:1.5}
+.contact-line{display:flex;flex-direction:column;gap:3px}
+.contact-line span{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--gris-sport)}
+.contact-line a,.contact-line strong{color:var(--white);font-size:15px;font-weight:600;text-decoration:none;word-break:break-word}
+.contact-line a:hover{text-decoration:underline}
+.contact-form{padding:28px;display:flex;flex-direction:column;gap:4px}
+.contact-form h2{margin-bottom:10px}
+.contact-form textarea.field-input{min-height:120px;resize:vertical;font-family:inherit}
+.contact-send{align-self:flex-start;padding:12px 28px;background:var(--charbon);color:#fff;border:none;border-bottom:3px solid var(--gris-sport);border-radius:var(--radius-md);font-size:13px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.05em;margin-top:6px}
+.contact-send:disabled{opacity:0.5;cursor:wait}
+.contact-status{display:none;font-size:13px;padding:10px 12px;border-radius:var(--radius-sm);margin-top:10px}
+.contact-status.ok{display:block;background:var(--green-light);color:var(--green)}
+.contact-status.err{display:block;background:var(--red-light);color:var(--red)}
+.hp-field{position:absolute;left:-9999px}
+footer a{color:var(--gray-700);font-weight:600}
+@media(max-width:760px){.contact-card{grid-template-columns:1fr}.site-header{padding:12px 16px}}
 </style>
 </head>
 <body>
 
 <header class="site-header">
   <div class="brand">Les Passionnés Motoneige<small>Boutique officielle · propulsé par Impression Peak 2 Peak</small></div>
+  <nav class="site-nav"><a href="#nous-joindre">Nous joindre</a></nav>
 </header>
 
 <section class="hero">
@@ -198,7 +225,39 @@ footer{text-align:center;font-size:11px;color:var(--gray-500);padding:24px;borde
   </aside>
 </div>
 
-<footer>© Les Passionnés Motoneige · Impression Peak 2 Peak, Bromont QC</footer>
+<section class="contact-section" id="nous-joindre">
+  <div class="contact-card">
+    <div class="contact-info">
+      <h2>Nous joindre</h2>
+      <p class="lead">Une question sur une commande, une grandeur ou la livraison? Écris-nous, on te répond rapidement.</p>
+      <div class="contact-line"><span>Courriel</span><a href="mailto:clubmotoneigep2p@gmail.com">clubmotoneigep2p@gmail.com</a></div>
+      <div class="contact-line"><span>Lyne Morin</span><a href="mailto:lynmor69@hotmail.com">lynmor69@hotmail.com</a></div>
+      <div class="contact-line"><span>Téléphone</span><a href="tel:+14502041916">450.204.1916</a></div>
+      <div class="contact-line"><span>Adresse</span><strong>Bromont, Qc</strong></div>
+    </div>
+    <form class="contact-form" id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <h2>Écris-nous</h2>
+      <input type="hidden" name="form-name" value="contact">
+      <p class="hp-field"><label>Ne pas remplir : <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+      <div class="field-group">
+        <label class="field-label" for="contact-nom">Nom *</label>
+        <input type="text" class="field-input" id="contact-nom" name="nom" required>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="contact-courriel">Courriel *</label>
+        <input type="email" class="field-input" id="contact-courriel" name="courriel" required>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="contact-message">Message *</label>
+        <textarea class="field-input" id="contact-message" name="message" required></textarea>
+      </div>
+      <button type="submit" class="contact-send" id="contact-send">Envoyer</button>
+      <div class="contact-status" id="contact-status" role="status"></div>
+    </form>
+  </div>
+</section>
+
+<footer>© Les Passionnés Motoneige · Impression Peak 2 Peak, Bromont QC · <a href="#nous-joindre">Nous joindre</a></footer>
 
 <div class="chart-modal-overlay" id="chart-modal-overlay" onclick="closeChart(event)">
   <div class="chart-modal-title" id="chart-modal-title"></div>
@@ -536,6 +595,36 @@ try {
     renderCart();
   }
 } catch(e) {}
+
+// ── NOUS JOINDRE (Netlify Forms) ───────────────────────────────────────
+(function(){
+  var form = document.getElementById('contact-form');
+  if (!form) return;
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var status = document.getElementById('contact-status');
+    var btn = document.getElementById('contact-send');
+    status.className = 'contact-status';
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    btn.disabled = true; btn.textContent = 'Envoi…';
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(new FormData(form)).toString()
+    })
+    .then(function(res){
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      form.reset();
+      status.textContent = '✅ Merci! Ton message a été envoyé. On te répond bientôt.';
+      status.className = 'contact-status ok';
+    })
+    .catch(function(){
+      status.textContent = '❌ Le message n\'a pas pu être envoyé. Écris-nous directement à clubmotoneigep2p@gmail.com.';
+      status.className = 'contact-status err';
+    })
+    .then(function(){ btn.disabled = false; btn.textContent = 'Envoyer'; });
+  });
+})();
 </script>
 </body>
 </html>
