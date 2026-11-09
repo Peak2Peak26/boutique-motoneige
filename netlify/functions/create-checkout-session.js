@@ -23,7 +23,7 @@ const PRODUCTS = {
   "crewneck": { name: "Crewneck — Les Passionnés Motoneige", base: 5000, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"] },
   "hoodie-2": { name: "Hoodie — Les Passionnés Motoneige", base: 5500, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"] },
   "hoodie-se": { name: "Hoodie Édition Spéciale 4 logos — Les Passionnés Motoneige", base: 7500, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], colors: ["Noir", "Moss"] },
-  "manteau-3en1": { name: "Manteau 3 en 1 (Noir) — Les Passionnés Motoneige", base: 27500, sizes: ["S", "M", "L", "XL", "2XL", "3XL", "4XL"], surcharge: 1000 },
+  "manteau-3en1": { name: "Manteau 3 en 1 (Noir) — Les Passionnés Motoneige", base: 27500, sizes: ["S", "M", "L", "XL", "2XL", "3XL", "4XL"], surcharge: 1000, colors: ["Homme", "Femme"], sizesByColor: { Femme: ["XS", "S", "M", "L", "XL", "2XL"] } },
   "tshirt-dryfit": { name: "T-Shirt Dryfit — Les Passionnés Motoneige", base: 3500, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], colors: ["Homme", "Femme"] },
   "ml-dryfit": { name: "T-Shirt Manches Longues Dryfit — Les Passionnés Motoneige", base: 4500, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], colors: ["Homme", "Femme"] },
   "tuque": { name: "Tuque — Les Passionnés Motoneige", base: 3000, sizes: ["Unique"] },
@@ -93,7 +93,8 @@ exports.handler = async function (event) {
     const line_items = items.map(function (it) {
       const prod = PRODUCTS[it.id];
       if (!prod) throw new Error('Produit inconnu : ' + it.id);
-      if (prod.sizes.indexOf(it.size) === -1) throw new Error('Grandeur invalide : ' + it.size);
+      const validSizes = (prod.sizesByColor && prod.sizesByColor[it.color]) || prod.sizes;
+      if (validSizes.indexOf(it.size) === -1) throw new Error('Grandeur invalide : ' + it.size);
       let variante = '';
       if (prod.colors) {
         if (prod.colors.indexOf(it.color) === -1) throw new Error('Option invalide : ' + it.color);

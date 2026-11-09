@@ -216,7 +216,7 @@ var PRODUCTS = [
   {"id": "hoodie-se", "name": "Hoodie Édition Spéciale 4 logos", "price": 75.0, "img": "images/hoodie-se-noir.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-hoodie-se.webp", "colors": [{"name": "Noir", "img": "images/hoodie-se-noir.webp"}, {"name": "Moss", "img": "images/hoodie-se-moss.webp"}]},
   {"id": "tshirt-dryfit", "name": "T-Shirt Dryfit", "price": 35.0, "img": "images/tshirt-dryfit-homme.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-tshirt-dryfit-homme.webp", "colors": [{"name": "Homme", "img": "images/tshirt-dryfit-homme.webp", "chart": "images/chart-tshirt-dryfit-homme.webp"}, {"name": "Femme", "img": "images/tshirt-dryfit-femme.webp", "chart": "images/chart-tshirt-dryfit-femme.webp"}]},
   {"id": "ml-dryfit", "name": "T-Shirt Manches Longues Dryfit", "price": 45.0, "img": "images/ml-dryfit-homme.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-ml-dryfit-homme.webp", "colors": [{"name": "Homme", "img": "images/ml-dryfit-homme.webp", "chart": "images/chart-ml-dryfit-homme.webp"}, {"name": "Femme", "img": "images/ml-dryfit-femme.webp", "chart": "images/chart-ml-dryfit-femme.webp"}]},
-  {"id": "manteau-3en1", "name": "Manteau 3 en 1 (Noir)", "price": 275.0, "img": "images/manteau-3en1.webp", "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-manteau-3en1.webp", "surcharge": 10.0},
+  {"id": "manteau-3en1", "name": "Manteau 3 en 1 (Noir)", "price": 275.0, "img": "images/manteau-3en1.webp", "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL"], "sizeChart": "images/chart-manteau-3en1.webp", "surcharge": 10.0, "colors": [{"name": "Homme", "img": "images/manteau-3en1.webp", "chart": "images/chart-manteau-3en1.webp", "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL"]}, {"name": "Femme", "img": "images/manteau-3en1-femme.webp", "chart": "images/chart-manteau-3en1-femme.webp", "sizes": ["XS", "S", "M", "L", "XL", "2XL"]}]},
   {"id": "tuque", "name": "Tuque", "price": 30.0, "img": "images/tuque.webp", "sizes": ["Unique"]},
   {"id": "casquette", "name": "Casquette", "price": 35.0, "img": "images/casquette.webp", "sizes": ["Unique"]},
   {"id": "casquette-flexfit", "name": "Casquette Flexfit", "price": 39.0, "img": "images/casquette-flexfit.webp", "sizes": ["S/M", "L/XL"]}
@@ -254,6 +254,20 @@ var TVQ_RATE = 0.09975;
 
 function fmt(n){ return n.toFixed(2).replace('.',',') + ' $'; }
 function surchargeOf(prod){ return (prod && prod.surcharge) || SURCHARGE; }
+function sizesFor(prod, colorName){
+  if (prod.colors) {
+    var c = prod.colors.filter(function(x){ return x.name === (colorName || prod.colors[0].name); })[0];
+    if (c && c.sizes) return c.sizes;
+  }
+  return prod.sizes;
+}
+function sizeOptsHtml(prod, sizes){ return sizes.map(function(s){ return '<option value="' + s + '">' + s + (BIG_SIZES.indexOf(s)!==-1 ? ' (+' + fmt(surchargeOf(prod)) + ')' : '') + '</option>'; }).join(''); }
+function sizeNoteFor(prod, sizes){
+  if (sizes.length <= 1) return 'Taille unique';
+  var reg = sizes.filter(function(s){ return BIG_SIZES.indexOf(s) === -1; });
+  var big = sizes.filter(function(s){ return BIG_SIZES.indexOf(s) !== -1; });
+  return reg[0] + '–' + reg[reg.length - 1] + (big.length ? ', +' + fmt(surchargeOf(prod)) + ' pour ' + big.join('-') : '');
+}
 function unitPrice(prod, size){ return prod.price + (BIG_SIZES.indexOf(size) !== -1 ? surchargeOf(prod) : 0); }
 
 // ── RENDER PRODUCTS ──────────────────────────────────────────────────────
@@ -281,10 +295,9 @@ function renderProducts() {
       '</div>'
     ) : '';
 
-    var sizeOpts = active.sizes.map(function(s){ return '<option value="' + s + '">' + s + (BIG_SIZES.indexOf(s)!==-1 ? ' (+' + fmt(surchargeOf(active)) + ')' : '') + '</option>'; }).join('');
-    var hasBigSizes = active.sizes.some(function(s){ return BIG_SIZES.indexOf(s) !== -1; });
-    var sizeNote = active.sizes.length <= 1 ? 'Taille unique' :
-      (active.sizes[0] + '–' + active.sizes[active.sizes.length - (hasBigSizes ? BIG_SIZES.length + 1 : 1)] + (hasBigSizes ? ', +' + fmt(surchargeOf(active)) + ' pour ' + BIG_SIZES.join('-') : ''));
+    var activeSizes = sizesFor(active, selectedColors[p.id]);
+    var sizeOpts = sizeOptsHtml(active, activeSizes);
+    var sizeNote = sizeNoteFor(active, activeSizes);
     var sizeChartLink = p.sizeChart ? '<button type="button" class="p-chart-link" onclick="openChartFor(\'' + p.id + '\')">📏 Guide des tailles</button>' : '';
     var colorSwatches = '';
     if (p.colors) {
@@ -299,11 +312,11 @@ function renderProducts() {
     }
     return '' +
       '<div class="product-card">' +
-        '<img class="product-card-img" id="img-' + p.id + '" src="' + p.img + '" alt="' + p.name + '">' +
+        '<img class="product-card-img" id="img-' + p.id + '" src="' + ((p.colors && selectedColors[p.id] && (p.colors.filter(function(c){ return c.name === selectedColors[p.id]; })[0] || {}).img) || p.img) + '" alt="' + p.name + '">' +
         '<div class="product-card-body">' +
           '<div class="product-card-name">' + p.name + '</div>' +
           audienceToggle +
-          '<div class="product-card-price">' + fmt(active.price) + ' <span>/ pièce · ' + sizeNote + '</span></div>' +
+          '<div class="product-card-price">' + fmt(active.price) + ' <span id="note-' + p.id + '">/ pièce · ' + sizeNote + '</span></div>' +
           sizeChartLink +
           colorSwatches +
           '<div class="product-row">' +
@@ -352,6 +365,12 @@ function selectColor(id, colorName) {
   var prod = PRODUCTS.filter(function(p){ return p.id === id; })[0];
   var color = prod.colors.filter(function(c){ return c.name === colorName; })[0];
   document.getElementById('img-' + id).src = color.img;
+  if (color.sizes) {
+    var sel = document.getElementById('size-' + id), prev = sel.value;
+    sel.innerHTML = sizeOptsHtml(prod, color.sizes);
+    if (color.sizes.indexOf(prev) !== -1) sel.value = prev;
+    document.getElementById('note-' + id).textContent = '/ pièce · ' + sizeNoteFor(prod, color.sizes);
+  }
 
   var swatches = document.querySelectorAll('.color-swatch[data-product="' + id + '"]');
   swatches.forEach(function(sw) {
