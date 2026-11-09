@@ -43,6 +43,7 @@ var PRODUCTS = {
   "crewneck": { name: "Crewneck", price: 50.00 },
   "hoodie-2": { name: "Hoodie", price: 55.00 },
   "hoodie-se": { name: "Hoodie Édition Spéciale 4 logos", price: 75.00 },
+  "manteau-3en1": { name: "Manteau 3 en 1 (Noir)", price: 275.00, surcharge: 10.00 },
   "tshirt-dryfit": { name: "T-Shirt Dryfit", price: 35.00 },
   "ml-dryfit": { name: "T-Shirt Manches Longues Dryfit", price: 45.00 },
   "tuque": { name: "Tuque", price: 30.00 },
@@ -88,7 +89,7 @@ var TPS_RATE = 0.05;
 var TVQ_RATE = 0.09975;
 
 function unitPrice(prod, size) {
-  return prod.price + (BIG_SIZES.indexOf(size) !== -1 ? SURCHARGE : 0);
+  return prod.price + (BIG_SIZES.indexOf(size) !== -1 ? (prod.surcharge || SURCHARGE) : 0);
 }
 
 function sendOrderNotification() {

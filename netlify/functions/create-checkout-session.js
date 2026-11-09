@@ -23,6 +23,7 @@ const PRODUCTS = {
   "crewneck": { name: "Crewneck — Les Passionnés Motoneige", base: 5000, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"] },
   "hoodie-2": { name: "Hoodie — Les Passionnés Motoneige", base: 5500, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"] },
   "hoodie-se": { name: "Hoodie Édition Spéciale 4 logos — Les Passionnés Motoneige", base: 7500, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], colors: ["Noir", "Moss"] },
+  "manteau-3en1": { name: "Manteau 3 en 1 (Noir) — Les Passionnés Motoneige", base: 27500, sizes: ["S", "M", "L", "XL", "2XL", "3XL", "4XL"], surcharge: 1000 },
   "tshirt-dryfit": { name: "T-Shirt Dryfit — Les Passionnés Motoneige", base: 3500, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], colors: ["Homme", "Femme"] },
   "ml-dryfit": { name: "T-Shirt Manches Longues Dryfit — Les Passionnés Motoneige", base: 4500, sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"], colors: ["Homme", "Femme"] },
   "tuque": { name: "Tuque — Les Passionnés Motoneige", base: 3000, sizes: ["Unique"] },
@@ -30,7 +31,7 @@ const PRODUCTS = {
   "casquette-flexfit": { name: "Casquette Flexfit — Les Passionnés Motoneige", base: 3900, sizes: ["S/M", "L/XL"] }
 };
 const BIG_SIZES = ['2XL', '3XL', '4XL'];
-const SURCHARGE_CENTS = 500; // +5,00 $ pour 2XL / 3XL / 4XL
+const SURCHARGE_CENTS = 500; // +5,00 $ pour 2XL / 3XL / 4XL (+10 $ pour le manteau 3 en 1 : voir surcharge)
 // Livraison en cents — mêmes zones que index.html et merci.html
 const LIVRAISON_STANDARD = 1500;   // Québec
 const LIVRAISON_HORS_QC  = 2500;   // autres provinces
@@ -100,7 +101,7 @@ exports.handler = async function (event) {
       }
 
       const qty = Math.max(1, Math.min(99, parseInt(it.qty, 10) || 1));
-      const unit_amount = prod.base + (BIG_SIZES.indexOf(it.size) !== -1 ? SURCHARGE_CENTS : 0);
+      const unit_amount = prod.base + (BIG_SIZES.indexOf(it.size) !== -1 ? (prod.surcharge || SURCHARGE_CENTS) : 0);
 
       return {
         name: prod.name + variante + ' — Grandeur ' + it.size,
